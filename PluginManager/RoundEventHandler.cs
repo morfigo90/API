@@ -24,7 +24,7 @@ namespace EventManager
         int votes = 0;
         int rounds_without_event = 0;
         Player winner;
-        List<Player> DM_players = new List<Player>();
+        List<string> DM_players = new List<string>();
         List<string> DM_PRole = new List<string>();
         List<string> TSL_T = new List<string>();
         List<string> TSL_I = new List<string>();
@@ -1128,7 +1128,8 @@ namespace EventManager
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
                     return;
                 }
-                DM_PRole.Clear();
+                #region old
+                /*DM_PRole.Clear();
                 DM_players.Clear();
                 EventManager.RoundLocked = true;
                 EventManager.DisableRespawns = true;
@@ -1151,7 +1152,7 @@ namespace EventManager
                     if (player.TeamRole.Team == Team.CLASSD || player.TeamRole.Team == Team.SCIENTIST)
                     {
                         player.ChangeRole(Role.NTF_LIEUTENANT);
-                        DM_players.Add(player);
+                        DM_players.Add(player.SteamId);
                         DM_PRole.Add("MTF");
                         player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.SCP_096));
                         plugin.Info("MTF:" + player.Name);
@@ -1159,11 +1160,31 @@ namespace EventManager
                     else
                     {
                         player.ChangeRole(Role.CHAOS_INSURGENCY);
-                        DM_players.Add(player);
+                        DM_players.Add(player.SteamId);
                         DM_PRole.Add("CI");
                         player.Teleport(CISpawn);
                         plugin.Info("CI:" + player.Name);
                     }
+                });*/
+                #endregion
+                EventManager.DisableRespawns = true;
+                EventManager.RoundLocked = true;
+                plugin.Server.Map.GetElevators().ForEach(elevator => {
+                    elevator.Locked = true;
+                });
+                plugin.Server.Map.GetDoors().ForEach(door => {
+                    if (door.Name == "GATE_A")
+                    {
+                        door.Open = true;
+                    }
+                });
+                plugin.Server.GetPlayers(new Role[] { Role.CHAOS_INSURGENCY, Role.FACILITY_GUARD, Role.SCP_049, Role.SCP_079, Role.SCP_096, Role.SCP_106, Role.SCP_173, Role.SCP_939_53, Role.SCP_939_89 }).ForEach(player => {
+                    player.ChangeRole(Role.NTF_LIEUTENANT);
+                    player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.SCP_096));
+                });
+                plugin.Server.GetPlayers(new Role[] { Role.CLASSD, Role.SCIENTIST }).ForEach(player => {
+                    player.ChangeRole(Role.CHAOS_INSURGENCY);
+                    player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.FACILITY_GUARD));
                 });
             }
             else if (EventManager.ActiveEvent == "TSL")
@@ -1203,7 +1224,7 @@ namespace EventManager
                             }
                             else if (randI == 2)
                             {
-                                plugin.Server.Map.SpawnItem(ItemType.USP, pos, new Vector(0, 0, 0));
+                                plugin.Server.Map.SpawnItem(ItemType.MEDKIT, pos, new Vector(0, 0, 0));
                             }
                             else if (randI == 3)
                             {
@@ -1223,14 +1244,17 @@ namespace EventManager
                             }
                             else if (randI == 7)
                             {
-                                plugin.Server.Map.SpawnItem(ItemType.MEDKIT, pos, new Vector(0, 0, 0));
+                                plugin.Server.Map.SpawnItem(ItemType.LOGICER, pos, new Vector(0, 0, 0));
                             }
                         }
                     }
                 }
                 int DC = 0;
                 int TC = 0;
-                while (DC <= plugin.Server.NumPlayers * (TSL_C_DP / 100))
+                TSL_D.Clear();
+                TSL_T.Clear();
+                TSL_I.Clear();
+                while (DC < plugin.Server.NumPlayers * (TSL_C_DP / 100))
                 {
                     int rand = new Random().Next(0, plugin.Server.NumPlayers - 1);
                     Player choosen = plugin.Server.GetPlayers()[rand];
@@ -1246,7 +1270,7 @@ namespace EventManager
                         DC++;
                     }
                 }
-                while (TC <= plugin.Server.NumPlayers * (TSL_C_TP / 100))
+                while (TC < plugin.Server.NumPlayers * (TSL_C_TP / 100))
                 {
                     int rand = new Random().Next(0, plugin.Server.NumPlayers - 1);
                     Player choosen = plugin.Server.GetPlayers()[rand];
@@ -2542,7 +2566,8 @@ namespace EventManager
                 }
                 if (EventManager.ActiveEvent == "DM")
                 {
-                    int CIc = 0;
+                    #region Old
+                    /*int CIc = 0;
                     int MTFc = 0;
                     plugin.Server.GetPlayers().ForEach(playerC =>
                     {
@@ -2582,11 +2607,11 @@ namespace EventManager
                     plugin.Server.GetPlayers().ForEach(player =>
                     {
                         bool done = false;
-                        if (player.TeamRole.Role == Role.SPECTATOR && DM_players.Contains(player))
+                        if (player.TeamRole.Role == Role.SPECTATOR && DM_players.Contains(player.SteamId))
                         {
                             for (int i = 0; i < DM_players.Count; i++)
                             {
-                                if (DM_players[i].SteamId == player.SteamId)
+                                if (DM_players[i] == player.SteamId)
                                 {
                                     done = true;
                                     if (DM_PRole[i] == "CI")
@@ -2613,7 +2638,7 @@ namespace EventManager
                         }
                         if (!done)
                         {
-                            DM_players.Add(player);
+                            DM_players.Add(player.SteamId);
                             if (CIc >= MTFc)
                             {
                                 DM_PRole.Add("CI");
@@ -2634,7 +2659,26 @@ namespace EventManager
                                 player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.SCP_096));
                             }
                         }
-                    });
+                    });*/
+                    #endregion
+                    if(plugin.Server.GetPlayers(Role.CHAOS_INSURGENCY).Count == 0)
+                    {
+                        EventManager.ActiveEvent = "";
+                        EventManager.DisableRespawns = false;
+                        EventManager.RoundLocked = false;
+                        plugin.Server.Map.Broadcast(10, "MTF wygrało", false);
+                        plugin.Server.Map.AnnounceCustomMessage("Attention all personnel . Spotted only M T F");
+                        plugin.Round.EndRound();
+                    }
+                    if(plugin.Server.GetPlayers(Role.NTF_LIEUTENANT).Count == 0)
+                    {
+                        EventManager.ActiveEvent = "";
+                        EventManager.DisableRespawns = false;
+                        EventManager.RoundLocked = false;
+                        plugin.Server.Map.Broadcast(10, "CI wygrało", false);
+                        plugin.Server.Map.AnnounceCustomMessage("Attention all personnel . Spotted only C I");
+                        plugin.Round.EndRound();
+                    }
                 }
                 if (EventManager.ActiveEvent == "TSL")
                 {
@@ -2938,6 +2982,7 @@ namespace EventManager
                 bool foundK = false;
                 string KillerRole = "";
                 string PlayerRole = "";
+                if (ev.Player == null || ev.Killer == null) return;
                 TSL_D.ForEach(pos => {
                     if(pos == ev.Player.SteamId)
                     {
@@ -2989,11 +3034,11 @@ namespace EventManager
                 });
                 if(foundP == false)
                 {
-                    plugin.Server.Map.Broadcast(5, "(EventManager.TSL)Error:Player not found!", false);
+                    plugin.Info("(EventManager.TSL)Error:Player not found!");
                 }
                 if (foundK == false)
                 {
-                    plugin.Server.Map.Broadcast(5, "(EventManager.TSL)Error:Killer not found!", false);
+                    plugin.Info("(EventManager.TSL)Error:Killer not found!");
                 }
                 if(KillerRole == "D")
                 {
@@ -3011,7 +3056,7 @@ namespace EventManager
                         TSL_ITK++;
                     } else
                     {
-                        plugin.Server.Map.Broadcast(5, "(EventManager.TSL)Error:Unknown player role!", false);
+                        plugin.Info("(EventManager.TSL)Error:Unknown player role!");
                     }
                     ev.Killer.PersonalBroadcast(10, " Pozostało " + TSL_T.Count + " Zdrajców", false);
                 }
@@ -3034,7 +3079,7 @@ namespace EventManager
                     }
                     else
                     {
-                        plugin.Server.Map.Broadcast(5, "(EventManager.TSL)Error:Unknown player role!", false);
+                        plugin.Info("(EventManager.TSL)Error:Unknown player role!");
                     }
                 }
                 else if (KillerRole == "T")
@@ -3054,12 +3099,12 @@ namespace EventManager
                     }
                     else
                     {
-                        plugin.Server.Map.Broadcast(5, "(EventManager.TSL)Error:Unknown player role!", false);
+                        plugin.Info("(EventManager.TSL)Error:Unknown player role!");
                     }
                     ev.Killer.PersonalBroadcast(10, " Pozostało " + TSL_T.Count + " niewinnych",false);
                 } else
                 {
-                    plugin.Server.Map.Broadcast(5, "(EventManager.TSL)Error:Unknown killer role!", false);
+                    plugin.Info("(EventManager.TSL)Error:Unknown killer role!");
                 }
             }
             else if(EventManager.ActiveEvent == "Camelon")
@@ -3345,6 +3390,34 @@ namespace EventManager
                     ev.Player.SetHealth(800);
                     ev.Player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.CLASSD));
                     ev.Player.PersonalBroadcast(10, "Jesteś SCP. Twoje zadanie to zabić wszystkich MTF przed dekontaminacją LCZ.", false);
+                }
+            }
+            else if(EventManager.ActiveEvent == "DM")
+            {
+                if (ev.Player.GetHealth() - ev.Damage <= 0)
+                {
+                    if(ev.Player.TeamRole.Team == Team.CHAOS_INSURGENCY)
+                    {
+                        ev.Player.ChangeRole(Role.NTF_LIEUTENANT);
+                        ev.Player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.SCP_096));
+                    } else if(ev.Player.TeamRole.Team == Team.NINETAILFOX)
+                    {
+                        ev.Player.ChangeRole(Role.CHAOS_INSURGENCY);
+                        ev.Player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.FACILITY_GUARD));
+                    } else
+                    {
+                        int rand = new Random().Next(0, 1);
+                        if (rand == 0)
+                        {
+                            ev.Player.ChangeRole(Role.NTF_LIEUTENANT);
+                            ev.Player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.SCP_096));
+                        }
+                        else if (rand == 1)
+                        {
+                            ev.Player.ChangeRole(Role.CHAOS_INSURGENCY);
+                            ev.Player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.FACILITY_GUARD));
+                        }
+                    }
                 }
             }
         }
