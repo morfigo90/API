@@ -13,7 +13,7 @@ namespace EventManager
         name = "EventManager",
         description = "Event Manager . Loaded 19 events",
         id = "Gamer.EM.BETA",
-        version = "1.7.0",
+        version = "1.7.1",
         SmodMajor = 3,
         SmodMinor = 4,
         SmodRevision = 0
@@ -84,6 +84,7 @@ namespace EventManager
         static internal bool DisableRespawns = false;
         static internal bool BlackOut = false;
         static internal List<int> InGhostMode_pid = new List<int>();
+        static internal Smod2.API.Role spectator_role = Smod2.API.Role.UNASSIGNED;
         static internal bool RoundStarted = false;
         static internal bool TB1 = false;
         static internal DateTime T1;
@@ -94,6 +95,8 @@ namespace EventManager
         static internal DateTime T_BO;
         static internal todsc ToDSC = null;
         static internal bool OfflineMode = true;
+        static internal bool AllowToEveryone = true;
+        static internal bool DNPN = true;
         #endregion
         public override void OnDisable(){}
         public override void OnEnable()
