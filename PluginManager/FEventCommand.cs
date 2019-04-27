@@ -132,8 +132,22 @@ namespace EventManager
                             }
                         case "VIP":
                             {
-                                new VIPEvent(plugin, admin, true);
-                                return new string[] { "Starting event. V.I.P" };
+                                if(args.Length == 2)
+                                {
+                                    return new string[] { "This event is Work In Progress.","Use experimental mode to activate it." };
+                                } else
+                                {
+                                    if(args[2] == "-e")
+                                    {
+                                        new VIPEvent(plugin, admin, true);
+                                        return new string[] { "Starting event. V.I.P" };
+                                    }
+                                    else
+                                    {
+                                        return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                    }
+                                }
+
                             }
                         case "Fight173":
                             {
@@ -167,8 +181,23 @@ namespace EventManager
                             }
                         case "DM":
                             {
-                                new DMEvent(plugin, admin, true);
-                                return new string[] { "Starting event. DeathMatch", "Warning! this event is w.i.p." };
+                                if (args.Length == 2)
+                                {
+                                    return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                }
+                                else
+                                {
+                                    if (args[2] == "-e")
+                                    {
+                                        new DMEvent(plugin, admin, true);
+                                        return new string[] { "Starting event. DeathMatch(WIP)" };
+                                    }
+                                    else
+                                    {
+                                        return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                    }
+                                }
+
                             }
                         case "TSL":
                             {
@@ -193,12 +222,27 @@ namespace EventManager
                         case "Spy":
                             {
                                 new SpyEvent(plugin, admin, true);
-                                return new string[] { "Starting event. Spy", "Warning! this event is w.i.p." };
+                                return new string[] { "Starting event. Spy" };
                             }
                         case "Piniata":
                             {
-                                new PiniataEvent(plugin, admin, true);
-                                return new string[] { "Starting event. Piniata", "Warning! this event is w.i.p." };
+                                if (args.Length == 2)
+                                {
+                                    return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                }
+                                else
+                                {
+                                    if (args[2] == "-e")
+                                    {
+                                        new PiniataEvent(plugin, admin, true);
+                                        return new string[] { "Starting event. Piniata(WIP)" };
+                                    }
+                                    else
+                                    {
+                                        return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                    }
+                                }
+
                             }
                         case "372":
                             {
@@ -212,8 +256,23 @@ namespace EventManager
                             }
                         case "689":
                             {
-                                new SCP689Event(plugin, admin, true);
-                                return new string[] { "Starting event. Breakout of SCP 689" };
+                                if (args.Length == 2)
+                                {
+                                    return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                }
+                                else
+                                {
+                                    if (args[2] == "-e")
+                                    {
+                                        new SCP689Event(plugin, admin, true);
+                                        return new string[] { "Starting event. Breakout of SCP 689(WIP)" };
+                                    }
+                                    else
+                                    {
+                                        return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                    }
+                                }
+
                             }
                         case "1499":
                             {

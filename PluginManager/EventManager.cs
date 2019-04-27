@@ -11,7 +11,7 @@ namespace EventManager
     [PluginDetails(
         author = "Gamer",
         name = "EventManager",
-        description = "Event Manager . Loaded 19 events",
+        description = "Event Manager.",
         id = "Gamer.EM.BETA",
         version = "1.7.1",
         SmodMajor = 3,
@@ -58,7 +58,7 @@ namespace EventManager
             "(Chowany)Chowany-Opis na discord",
             "(Achtung)Achtung-Opis na discord",
             "(BDeath)Czarna Śmierć-Opis na discord",
-            "(VIP)V.I.P.-Opis na discord",
+            "(VIP)V.I.P.-Opis na discord(WIP)",
             "(Fight173)Bitka z 173-Opis na discord",
             "(Blackout)Blackout-Zwykła runda ale z zgaszonymi światłami",
             "(Run123)1 2 3 Idziemy gdy nie patrzysz ty-Opis na discord",

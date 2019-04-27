@@ -11,6 +11,9 @@ namespace EventManager
         private EventManager plugin;
         public SpyEvent(EventManager plugin, Smod2.API.Player admin, bool forced)
         {
+            plugin.Server.Map.Broadcast(5, "(EventManager)Zablokowano uruchamianie eventy:Szpiedzy. To tylko placeholder", false);
+            EventManager.ToDSC.Info("Blocked event initation. It's placeholder.");
+            return;
             EventManager.ActiveEvent = "Spy";
             this.plugin = plugin;
             plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:Szpiedzy", false);

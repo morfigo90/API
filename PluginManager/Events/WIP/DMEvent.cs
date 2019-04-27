@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "DM";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:DeatchMatch", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:DeatchMatch(WIP)", false);
             EventManager.ToDSC.Initate(admin, "DM", forced);
         }
     }
