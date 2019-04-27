@@ -1,3 +1,3 @@
 # Event-Manager
 
-Version:1.7.0 BETA
+Version:1.7.1 BETA
