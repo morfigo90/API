@@ -1,0 +1,14 @@
+-dodano respienie siê logicera w trybie:"Morbus"
+-naprawiono blackout w trybie:"Morbus"
+-naprawiono komendê "blackout"
+-dodano respienie siê broni w trybie:"TSL"
+-dodano komendê domyœlnych ról dla spectatorów
+-dodano opcjê "ignoruj wymagane uprawnienia"
+-dodano opcjê "ignoruj wymagan¹ liczbê graczy"
+-naprawiono b³¹d w trybie:"Morbus"-Checkpoint do entrace zone by³ otwarty a nie powinnien
+-poprawiono punkty zdrobia "Matki" w trybie:"Morbus"
+-dodano warunek wygranej klasD w trybie:"Morbus" w wypadku odpalenia wszystkich generatorów
+
+-dodano informacje o tym ¿e event jest "WIP"
+-zablokowano mo¿liwoœæ uruchomienia placeholderów
+-zmieniono uruchamanie eventów. Teraz aby uruchomiæ event "WIP" nale¿y dodaæ na koñcu komendy argument "-e"

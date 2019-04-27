@@ -26,7 +26,7 @@ namespace EventManager
 
         public string GetUsage()
         {
-            return "EventManager (force (event name))/(list)/(lockround true/false)/(disresp true/false)/(blackout true/false)/(ghost true/false)/(warp [warp])/(pos)/(tpc [x] [y] [z])/(config)";
+            return "EventManager (force (event name))/(list)/(lockround true/false)/(disresp true/false)/(blackout true/false)/(ghost true/false)/(warp [warp])/(pos)/(tpc [x] [y] [z])/(config)/(specrole [role])";
         }
 
         public string[] OnCall(ICommandSender sender, string[] args)
@@ -56,7 +56,7 @@ namespace EventManager
                     });
                 }
             });
-
+            if (EventManager.AllowToEveryone) allow = true;
             if (args[0].ToLower() == "list" || args[0].ToLower() == "l")
             {
                 List<string> args2 = new List<string>();
@@ -132,8 +132,22 @@ namespace EventManager
                             }
                         case "VIP":
                             {
-                                new VIPEvent(plugin, admin, true);
-                                return new string[] { "Starting event. V.I.P" };
+                                if(args.Length == 2)
+                                {
+                                    return new string[] { "This event is Work In Progress.","Use experimental mode to activate it." };
+                                } else
+                                {
+                                    if(args[2] == "-e")
+                                    {
+                                        new VIPEvent(plugin, admin, true);
+                                        return new string[] { "Starting event. V.I.P" };
+                                    }
+                                    else
+                                    {
+                                        return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                    }
+                                }
+
                             }
                         case "Fight173":
                             {
@@ -167,8 +181,23 @@ namespace EventManager
                             }
                         case "DM":
                             {
-                                new DMEvent(plugin, admin, true);
-                                return new string[] { "Starting event. DeathMatch", "Warning! this event is w.i.p." };
+                                if (args.Length == 2)
+                                {
+                                    return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                }
+                                else
+                                {
+                                    if (args[2] == "-e")
+                                    {
+                                        new DMEvent(plugin, admin, true);
+                                        return new string[] { "Starting event. DeathMatch(WIP)" };
+                                    }
+                                    else
+                                    {
+                                        return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                    }
+                                }
+
                             }
                         case "TSL":
                             {
@@ -193,12 +222,27 @@ namespace EventManager
                         case "Spy":
                             {
                                 new SpyEvent(plugin, admin, true);
-                                return new string[] { "Starting event. Spy", "Warning! this event is w.i.p." };
+                                return new string[] { "Starting event. Spy" };
                             }
                         case "Piniata":
                             {
-                                new PiniataEvent(plugin, admin, true);
-                                return new string[] { "Starting event. Piniata", "Warning! this event is w.i.p." };
+                                if (args.Length == 2)
+                                {
+                                    return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                }
+                                else
+                                {
+                                    if (args[2] == "-e")
+                                    {
+                                        new PiniataEvent(plugin, admin, true);
+                                        return new string[] { "Starting event. Piniata(WIP)" };
+                                    }
+                                    else
+                                    {
+                                        return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                    }
+                                }
+
                             }
                         case "372":
                             {
@@ -212,8 +256,23 @@ namespace EventManager
                             }
                         case "689":
                             {
-                                new SCP689Event(plugin, admin, true);
-                                return new string[] { "Starting event. Breakout of SCP 689" };
+                                if (args.Length == 2)
+                                {
+                                    return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                }
+                                else
+                                {
+                                    if (args[2] == "-e")
+                                    {
+                                        new SCP689Event(plugin, admin, true);
+                                        return new string[] { "Starting event. Breakout of SCP 689(WIP)" };
+                                    }
+                                    else
+                                    {
+                                        return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
+                                    }
+                                }
+
                             }
                         case "1499":
                             {
@@ -328,6 +387,7 @@ namespace EventManager
                     if (args[1].ToLower() == "true")
                     {
                         EventManager.BlackOut = true;
+                        EventManager.T_BO = DateTime.Now.AddSeconds(1);
                         return new string[] { "Done", "Blackout is now enabled" };
                     }
                     else if (args[1].ToLower() == "false")
@@ -530,7 +590,7 @@ namespace EventManager
                 });
                 return new string[] { "Done" };
             }
-            else if(args[0].ToLower() == "ghost")
+            else if (args[0].ToLower() == "ghost")
             {
                 if (!plugin.ConfigManager.Config.GetBoolValue("sm_enable_ghostmode", false)) return new string[] { "Ghost mode is disabled in server configs!" };
                 string[] toReturn = new string[] { "" };
@@ -633,6 +693,107 @@ namespace EventManager
                     {
                         return new string[] { "Unknown arguments!", "em ghost [playerid] true/false (visibleTospec?(default:true)) (visibleWhenTalking?(default:true))" };
                     }
+                }
+            }
+            else if (args[0].ToLower() == "specrole")
+            {
+                if(args.Length == 1) return new string[] { "Wrong arguments!","Unknown Role. Role list:","MTF_COMM","MTF_L","MTF_C","MTF_S","GUARD", "SCIENTIST","CLASSD","TUT","CI","106","173","096","049","079","939","049-2", "ZOMBIE" ,"NONE"};
+                switch(args[1].ToUpper())
+                {
+                    case "MTF_COMM":
+                        {
+                            EventManager.spectator_role = Role.NTF_COMMANDER;
+                            return new string[] { "Done" };
+                        }
+                    case "MTF_L":
+                        {
+                            EventManager.spectator_role = Role.NTF_LIEUTENANT;
+                            return new string[] { "Done" };
+                        }
+                    case "MTF_C":
+                        {
+                            EventManager.spectator_role = Role.NTF_CADET;
+                            return new string[] { "Done" };
+                        }
+                    case "MTF_S":
+                        {
+                            EventManager.spectator_role = Role.NTF_SCIENTIST;
+                            return new string[] { "Done" };
+                        }
+                    case "GUARD":
+                        {
+                            EventManager.spectator_role = Role.FACILITY_GUARD;
+                            return new string[] { "Done" };
+                        }
+                    case "SCIENTIST":
+                        {
+                            EventManager.spectator_role = Role.SCIENTIST;
+                            return new string[] { "Done" };
+                        }
+                    case "CLASSD":
+                        {
+                            EventManager.spectator_role = Role.CLASSD;
+                            return new string[] { "Done" };
+                        }
+                    case "CI":
+                        {
+                            EventManager.spectator_role = Role.CHAOS_INSURGENCY;
+                            return new string[] { "Done" };
+                        }
+                    case "TUT":
+                        {
+                            EventManager.spectator_role = Role.TUTORIAL;
+                            return new string[] { "Done" };
+                        }
+                    case "ZOMBIE":
+                        {
+                            EventManager.spectator_role = Role.ZOMBIE;
+                            return new string[] { "Done" };
+                        }
+                    case "106":
+                        {
+                            EventManager.spectator_role = Role.SCP_106;
+                            return new string[] { "Done" };
+                        }
+                    case "173":
+                        {
+                            EventManager.spectator_role = Role.SCP_173;
+                            return new string[] { "Done" };
+                        }
+                    case "096":
+                        {
+                            EventManager.spectator_role = Role.SCP_096;
+                            return new string[] { "Done" };
+                        }
+                    case "049":
+                        {
+                            EventManager.spectator_role = Role.SCP_049;
+                            return new string[] { "Done" };
+                        }
+                    case "079":
+                        {
+                            EventManager.spectator_role = Role.SCP_079;
+                            return new string[] { "Done" };
+                        }
+                    case "939":
+                        {
+                            EventManager.spectator_role = Role.SCP_939_53;
+                            return new string[] { "Done" };
+                        }
+                    case "049-2":
+                        {
+                            EventManager.spectator_role = Role.SCP_049_2;
+                            return new string[] { "Done" };
+                        }
+                    case "NONE":
+                        {
+                            EventManager.spectator_role = Role.UNASSIGNED;
+                            return new string[] { "Done" };
+                        }
+                    default:
+                        {
+                            return new string[] { "Wrong arguments!", "Unknown Role. Role list:", "MTF_COMM", "MTF_L", "MTF_C", "MTF_S", "GUARD", "scientist".ToUpper(), "CLASSD", "TUT", "CI", "106", "173", "096", "049", "079", "939", "049-2" };
+                        }
                 }
             }
             else if (args[0].ToLower() == "info")

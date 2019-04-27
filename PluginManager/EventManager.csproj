@@ -65,7 +65,7 @@
     <Compile Include="Events\ToTest\DarkGameEvent.cs" />
     <Compile Include="Events\ToTest\Fight173Event.cs" />
     <Compile Include="Events\ToTest\Run123Event.cs" />
-    <Compile Include="Events\ToTest\VIPEvent.cs" />
+    <Compile Include="Events\WIP\VIPEvent.cs" />
     <Compile Include="Events\ToTest\BDeathEvent.cs" />
     <Compile Include="Events\ToTest\AchtungEvent.cs" />
     <Compile Include="Events\ToTest\WarHeadRunEvent.cs" />

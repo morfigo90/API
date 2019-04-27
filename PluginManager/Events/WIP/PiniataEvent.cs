@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "Piniata";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:Piniata", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:Piniata(WIP)", false);
             EventManager.ToDSC.Initate(admin, "Piniata", forced);
         }
     }

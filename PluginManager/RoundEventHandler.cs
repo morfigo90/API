@@ -265,7 +265,7 @@ namespace EventManager
             winner = null;
             if (EventManager.ActiveEvent == "WINauki")
             {
-                if (plugin.Server.NumPlayers <= 3)
+                if (plugin.Server.NumPlayers <= 3 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -390,7 +390,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "WarHeadRun")
             {
-                if (plugin.Server.NumPlayers <= 1)
+                if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -552,7 +552,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "Achtung")
             {
-                if (plugin.Server.NumPlayers <= 1)
+                if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -572,7 +572,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "BDeath")
             {
-                if (plugin.Server.NumPlayers <= 1)
+                if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -740,7 +740,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "VIP")
             {
-                if (plugin.Server.NumPlayers <= 9)
+                if (plugin.Server.NumPlayers <= 9 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -800,7 +800,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "Fight173")
             {
-                if (plugin.Server.NumPlayers <= 2)
+                if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -843,7 +843,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "Blackout")
             {
-                if (plugin.Server.NumPlayers <= 1)
+                if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -867,7 +867,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "Run123")
             {
-                if (plugin.Server.NumPlayers <= 2)
+                if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -919,7 +919,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "Search")
             {
-                if (plugin.Server.NumPlayers <= 1)
+                if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1022,7 +1022,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "Apo")
             {
-                if (plugin.Server.NumPlayers <= 1)
+                if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1070,7 +1070,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "DBBR")
             {
-                if (plugin.Server.NumPlayers <= 1)
+                if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1122,7 +1122,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "DM")
             {
-                if (plugin.Server.NumPlayers <= 3)
+                if (plugin.Server.NumPlayers <= 3 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1168,7 +1168,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "TSL")
             {
-                if (plugin.Server.NumPlayers <= 3)
+                if (plugin.Server.NumPlayers <= 3 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1188,6 +1188,46 @@ namespace EventManager
                         door.Locked = true;
                     }
                 });
+                for (int i = 0; i < plugin.Server.Map.Get079InteractionRooms(Scp079InteractionType.CAMERA).Length; i++)
+                {
+                    Room room = plugin.Server.Map.Get079InteractionRooms(Scp079InteractionType.CAMERA)[i];
+                    if (room.ZoneType == ZoneType.HCZ || room.ZoneType == ZoneType.LCZ)
+                    {
+                        if (room.RoomType != RoomType.X_INTERSECTION && room.RoomType != RoomType.T_INTERSECTION && room.RoomType != RoomType.CURVE && room.RoomType != RoomType.STRAIGHT)
+                        {
+                            Vector pos = new Vector(room.Position.x, room.Position.y + 2, room.Position.z);
+                            int randI = new Random().Next(1, 7);
+                            if (randI == 1)
+                            {
+                                plugin.Server.Map.SpawnItem(ItemType.COM15, pos, new Vector(0, 0, 0));
+                            }
+                            else if (randI == 2)
+                            {
+                                plugin.Server.Map.SpawnItem(ItemType.USP, pos, new Vector(0, 0, 0));
+                            }
+                            else if (randI == 3)
+                            {
+                                plugin.Server.Map.SpawnItem(ItemType.E11_STANDARD_RIFLE, pos, new Vector(0, 0, 0));
+                            }
+                            else if (randI == 4)
+                            {
+                                plugin.Server.Map.SpawnItem(ItemType.MEDKIT, pos, new Vector(0, 0, 0));
+                            }
+                            else if (randI == 5)
+                            {
+                                plugin.Server.Map.SpawnItem(ItemType.P90, pos, new Vector(0, 0, 0));
+                            }
+                            else if (randI == 6)
+                            {
+                                plugin.Server.Map.SpawnItem(ItemType.MP4, pos, new Vector(0, 0, 0));
+                            }
+                            else if (randI == 7)
+                            {
+                                plugin.Server.Map.SpawnItem(ItemType.MEDKIT, pos, new Vector(0, 0, 0));
+                            }
+                        }
+                    }
+                }
                 int DC = 0;
                 int TC = 0;
                 while (DC <= plugin.Server.NumPlayers * (TSL_C_DP / 100))
@@ -1252,7 +1292,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "Cameleon")
             {
-                if (plugin.Server.NumPlayers <= 2)
+                if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1285,14 +1325,13 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "Morbus")
             {
-                if (plugin.Server.NumPlayers <= 2)
+                if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
                     return;
                 }
                 EventManager.BlackOut = true;
-                EventManager.T_BO = DateTime.Now.AddSeconds(1);
                 Morbus_Respawn = true;
                 EventManager.DisableRespawns = true;
                 EventManager.RoundLocked = true;
@@ -1305,7 +1344,7 @@ namespace EventManager
                         door.Open = true;
                         door.Locked = true;
                     }
-                    if (door.Name == "CHECKPOINT_EZ")
+                    if (door.Name == "CHECKPOINT_ENT")
                     {
                         door.Open = false;
                         door.Locked = true;
@@ -1319,7 +1358,7 @@ namespace EventManager
                         if (room.RoomType != RoomType.X_INTERSECTION && room.RoomType != RoomType.T_INTERSECTION && room.RoomType != RoomType.CURVE && room.RoomType != RoomType.STRAIGHT)
                         {
                             Vector pos = new Vector(room.Position.x, room.Position.y + 2, room.Position.z);
-                            int randI = new Random().Next(1, 7);
+                            int randI = new Random().Next(1, 8);
                             if (randI == 1)
                             {
                                 plugin.Server.Map.SpawnItem(ItemType.COM15, pos, new Vector(0, 0, 0));
@@ -1348,15 +1387,19 @@ namespace EventManager
                             {
                                 plugin.Server.Map.SpawnItem(ItemType.MEDKIT, pos, new Vector(0, 0, 0));
                             }
+                            else if (randI == 8)
+                            {
+                                plugin.Server.Map.SpawnItem(ItemType.LOGICER, pos, new Vector(0, 0, 0));
+                            }
                         }
                     }
                 }
                 int rand = new Random().Next(0, plugin.Server.NumPlayers - 1);
                 Morbus_Mother = plugin.Server.GetPlayers()[rand];
-                Morbus_Mother.ChangeRole(Role.CLASSD);
-                Morbus_Mother.SetHealth(700);
-                Morbus_Mother.PersonalBroadcast(10, "Jesteś SCP 939 'Matka'. Za 2 minuty otrzymasz kubek. Jeśli go wyrzucisz staniesz się scp 939. Aby zamienić się spowrotem wpisz .z w konsoli pod ~~. Twoje zadanie to zabic klasy D. Jeśli umrzesz to przegrywasz.", false);
-                Morbus_Mother.PersonalBroadcast(10, "Jeśli kogoś zabijesz to staje się on ukrytym 939. Jeśli ukryty 939 umrze staje sie zwykłym 939", false);
+                plugin.Server.GetPlayers()[rand].ChangeRole(Role.CLASSD);
+                plugin.Server.GetPlayers()[rand].SetHealth(700);
+                plugin.Server.GetPlayers()[rand].PersonalBroadcast(10, "Jesteś SCP 939 'Matka'. Za 2 minuty otrzymasz kubek. Jeśli go wyrzucisz staniesz się scp 939. Aby zamienić się spowrotem wpisz .z w konsoli pod ~. Twoje zadanie to zabic klasy D. Jeśli umrzesz to przegrywasz.", false);
+                plugin.Server.GetPlayers()[rand].PersonalBroadcast(10, "Jeśli kogoś zabijesz to staje się on ukrytym 939. Jeśli ukryty 939 umrze staje sie zwykłym 939", false);
                 EventManager.T1 = DateTime.Now.AddMinutes(2);
                 EventManager.T1W = "Morbus";
                 EventManager.TB1 = true;
@@ -1369,10 +1412,11 @@ namespace EventManager
                     }
                     player.GiveItem(ItemType.FLASHLIGHT);
                 });
+                EventManager.T_BO = DateTime.Now.AddSeconds(1);
             }
             else if (EventManager.ActiveEvent == "Piniata")
             {
-                if (plugin.Server.NumPlayers <= 5)
+                if (plugin.Server.NumPlayers <= 5 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1600,7 +1644,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "372")
             {
-                if (plugin.Server.NumPlayers <= 2)
+                if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1626,7 +1670,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "343")
             {
-                if (plugin.Server.NumPlayers <= 2)
+                if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1641,7 +1685,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "689")
             {
-                if (plugin.Server.NumPlayers <= 2)
+                if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1664,7 +1708,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "Hunt")
             {
-                if (plugin.Server.NumPlayers <= 2)
+                if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1695,7 +1739,7 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "Plaga")
             {
-                if (plugin.Server.NumPlayers <= 2)
+                if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
                     plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
@@ -1735,8 +1779,11 @@ namespace EventManager
                 if (System.DateTime.Now.ToString() == EventManager.T_BO.ToString()) {
                     foreach (Room room in plugin.Server.Map.Get079InteractionRooms(Scp079InteractionType.CAMERA))
                     {
-                        if (room.ZoneType == ZoneType.HCZ || room.ZoneType == ZoneType.LCZ || room.RoomType == RoomType.NUKE || room.RoomType == RoomType.SCP_049 || room.RoomType == RoomType.ENTRANCE_CHECKPOINT) room.FlickerLights();
+                        if (room.ZoneType == ZoneType.HCZ || room.ZoneType == ZoneType.LCZ || room.RoomType == RoomType.NUKE || room.RoomType == RoomType.ENTRANCE_CHECKPOINT) {
+                            room.FlickerLights();
+                        }
                     }
+                    plugin.Debug("1 Blackout cycle");
                     EventManager.T_BO = DateTime.Now.AddSeconds(1);
                 }
             }
@@ -2080,12 +2127,20 @@ namespace EventManager
                         case "MorbusEnd":
                             {
                                 plugin.Server.GetPlayers().ForEach(player => {
-                                    if(Morbus_SCP_939.Contains(player.SteamId) || Morbus_SCP_hidden.Contains(player.SteamId))
+                                    if(Morbus_SCP_939.Contains(player.SteamId) || Morbus_SCP_hidden.Contains(player.SteamId) || Morbus_Mother.SteamId == player.SteamId)
                                     {
                                         player.ChangeRole(Role.SPECTATOR);
                                     } 
                                 });
-                                plugin.Server.Map.AnnounceCustomMessage("All SCP 9 3 9 successfully terminated");
+                                plugin.Server.Map.AnnounceCustomMessage("All SCP 9 3 9 successfully terminated by facility security system initiated by keter class SCPS containment breach");
+                                EventManager.RoundLocked = false;
+                                break;
+                            }
+                        case "Morbus_BOFF":
+                            {
+                                EventManager.T1 = DateTime.Now.AddMinutes(1);
+                                EventManager.T1W = "MorbusEnd";
+                                EventManager.TB1 = true;
                                 EventManager.RoundLocked = false;
                                 break;
                             }
@@ -2711,6 +2766,12 @@ namespace EventManager
                     });
                     DBBR_D = false;
                 }
+                if(EventManager.spectator_role != Role.UNASSIGNED)
+                {
+                    plugin.Server.GetPlayers(Role.SPECTATOR).ForEach(player => {
+                        player.ChangeRole(EventManager.spectator_role);
+                    });
+                }
             }          
         }
 
@@ -2778,6 +2839,20 @@ namespace EventManager
                 ev.Generator.HasTablet = false;
                 BDeath_GeneratorsDone++;
             }
+            else if (EventManager.ActiveEvent == "Morbus")
+            {
+                bool allDone = false;
+                for (int i = 0; i < plugin.Server.Map.GetGenerators().Length; i++)
+                {
+                    allDone = plugin.Server.Map.GetGenerators()[i].Engaged;
+                }
+                if(allDone)
+                {
+                    EventManager.T1 = DateTime.Now.AddMinutes(1);
+                    EventManager.T1W = "Morbus_BOFF";
+                    EventManager.TB1 = true;
+                }
+            }
         }
 
         public void OnGeneratorEjectTablet(PlayerGeneratorEjectTabletEvent ev)
@@ -2834,7 +2909,7 @@ namespace EventManager
                 ev.Generator.Open = false;
                 ev.Generator.TimeLeft = 40+plugin.Server.NumPlayers * 10;
             }
-            else if(EventManager.ActiveEvent == "Cameleon" && ev.Player.SteamId == Cam_SCP.SteamId)
+            else if (EventManager.ActiveEvent == "Cameleon" && ev.Player.SteamId == Cam_SCP.SteamId)
             {
                 ev.Allow = false;
             }
@@ -2844,6 +2919,10 @@ namespace EventManager
                 {
                     ev.Allow = false;
                 }
+            }
+            else if (EventManager.ActiveEvent == "Morbus")
+            {
+                ev.Generator.TimeLeft = 180;
             }
         }
 
