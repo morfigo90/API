@@ -1197,7 +1197,7 @@ namespace EventManager
                 EventManager.RoundLocked = true;
                 plugin.Server.Map.GetDoors().ForEach(door =>
                 {
-                    if (door.Name == "914" || door.Name == "CHECKPOINT_LCZ_B" || door.Name == "CHECKPOINT_LCZ_A")
+                    if (door.Name == "CHECKPOINT_LCZ_B" || door.Name == "CHECKPOINT_LCZ_A")
                     {
                         door.Locked = true;
                     }
@@ -3850,6 +3850,16 @@ namespace EventManager
                         } 
                     }
                     else
+                    {
+                        ev.Allow = false;
+                    }
+                }
+                else if(ev.Door.Name == "914")
+                {
+                    if(ev.Player.GetCurrentItem().ItemType == ItemType.MAJOR_SCIENTIST_KEYCARD)
+                    {
+                        ev.Allow = true;
+                    } else
                     {
                         ev.Allow = false;
                     }

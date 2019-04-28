@@ -20,3 +20,8 @@ Patch_4
 -dodano komendê:"controll079"
 -zmieniono broñ zdrajcy z Com15 na Logicer
 -dodano dodatkow¹ broñ dla zdrajcy w eventcie:"TSL"- granat od³amkowy
+-zmieniono system respienia siê broni w TSL
+-zamkniêto zbrojowniê
+-od teraz tylko zdrajcy mog¹ otwieraæ zbrojowniê
+-dodano dodatkowy startowy item dla zdrajcy-karta guarda
+-po œmierci zdrajcy karta znika

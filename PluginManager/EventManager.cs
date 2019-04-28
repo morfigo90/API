@@ -13,7 +13,7 @@ namespace EventManager
         name = "EventManager",
         description = "Event Manager.",
         id = "Gamer.EM.BETA",
-        version = "0.8.0",
+        version = "0.8.1",
         SmodMajor = 3,
         SmodMinor = 4,
         SmodRevision = 0
