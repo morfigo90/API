@@ -8,7 +8,7 @@ namespace EventManager
 {
     class SearchEvent : IEventHandler
     {
-        private EventManager plugin;
+        private  EventManager plugin;
         public SearchEvent(EventManager plugin, Smod2.API.Player admin, bool forced)
         {
             EventManager.ActiveEvent = "Search";

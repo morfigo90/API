@@ -13,7 +13,7 @@ namespace EventManager
         name = "EventManager",
         description = "Event Manager.",
         id = "Gamer.EM.BETA",
-        version = "1.7.2",
+        version = "0.8.0",
         SmodMajor = 3,
         SmodMinor = 4,
         SmodRevision = 0
@@ -64,7 +64,7 @@ namespace EventManager
             "(Run123)1 2 3 Idziemy gdy nie patrzysz ty-Opis na discord",
             "(Search)Poszukiwania-Opis na discord",
             "(Apo)Apokalipsa-Opis na discord",
-            "(DM)Deathmatch tag-Opis na discord(WIP)",
+            "(DM)Deathmatch tag-Opis na discord",
             "(TSL)Trouble in Secret Labolatory-zasady TTT",
             "(ODay)Oposite Day-Zwykła runda ale odwrotnie",
             "(Cameleon)SCP-Camelon może zmieniać się pomiędzy Naukowcem/Klasą D/Tutorialem. Jego zadanie to zabicie wszystkich poza SCP. Może zadawać obrażenia tylko jak jest Tutorialem.",

@@ -26,7 +26,7 @@ namespace EventManager
 
         public string GetUsage()
         {
-            return "EventManager (force (event name))/(list)/(lockround true/false)/(disresp true/false)/(blackout true/false)/(ghost true/false)/(warp [warp])/(pos)/(tpc [x] [y] [z])/(config)/(specrole [role])";
+            return "EventManager (force (event name))/(list)/(lockround true/false)/(disresp true/false)/(blackout true/false)/(ghost true/false)/(warp [warp])/(pos)/(tpc [x] [y] [z])/(config)/(specrole [role])(controll079 [args])";
         }
 
         public string[] OnCall(ICommandSender sender, string[] args)
@@ -181,23 +181,8 @@ namespace EventManager
                             }
                         case "DM":
                             {
-                                if (args.Length == 2)
-                                {
-                                    return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
-                                }
-                                else
-                                {
-                                    if (args[2] == "-e")
-                                    {
-                                        new DMEvent(plugin, admin, true);
-                                        return new string[] { "Starting event. DeathMatch(WIP)" };
-                                    }
-                                    else
-                                    {
-                                        return new string[] { "This event is Work In Progress.", "Use experimental mode to activate it." };
-                                    }
-                                }
-
+                                new DMEvent(plugin, admin, true);
+                                return new string[] { "Starting event. DeathMatch" };
                             }
                         case "TSL":
                             {
@@ -697,7 +682,13 @@ namespace EventManager
             }
             else if (args[0].ToLower() == "specrole")
             {
-                if(args.Length == 1) return new string[] { "Wrong arguments!","Unknown Role. Role list:","MTF_COMM","MTF_L","MTF_C","MTF_S","GUARD", "SCIENTIST","CLASSD","TUT","CI","106","173","096","049","079","939","049-2", "ZOMBIE" ,"NONE"};
+                List<string> args2 = new List<string>();
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args2.Add(args[i]);
+                }
+                EventManager.ToDSC.CommandCalled(admin, admin, "specrole", args2.ToArray());
+                if (args.Length == 1) return new string[] { "Wrong arguments!","Unknown Role. Role list:","MTF_COMM","MTF_L","MTF_C","MTF_S","GUARD", "SCIENTIST","CLASSD","TUT","CI","106","173","096","049","079","939","049-2", "ZOMBIE" ,"NONE"};
                 switch(args[1].ToUpper())
                 {
                     case "MTF_COMM":
@@ -793,6 +784,63 @@ namespace EventManager
                     default:
                         {
                             return new string[] { "Wrong arguments!", "Unknown Role. Role list:", "MTF_COMM", "MTF_L", "MTF_C", "MTF_S", "GUARD", "scientist".ToUpper(), "CLASSD", "TUT", "CI", "106", "173", "096", "049", "079", "939", "049-2" };
+                        }
+                }
+            }
+            else if (args[0].ToLower() == "controll079")
+            {
+                if (args.Length < 2) return new string[] { "Unknown args!","em controll079 lvl/xp/max_ap/ap/regen_ap [number]" };
+                List<string> args2 = new List<string>();
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args2.Add(args[i]);
+                }
+                EventManager.ToDSC.CommandCalled(admin, admin, "controll079", args2.ToArray());
+                switch(args[2])
+                {
+                    case "lvl":
+                        {
+                            if (args.Length < 3) return new string[] { "Unknown args!", "em controll079 lvl/xp/max_ap/ap/regen_ap [number]" };
+                            plugin.Server.GetPlayers(Role.SCP_079).ForEach(player => {
+                                player.Scp079Data.Level = Convert.ToInt16(args[3]);
+                            });
+                            return new string[] { "Done" };
+                        }
+                    case "xp":
+                        {
+                            if (args.Length < 3) return new string[] { "Unknown args!", "em controll079 lvl/xp/max_ap/ap/regen_ap [number]" };
+                            plugin.Server.GetPlayers(Role.SCP_079).ForEach(player => {
+                                player.Scp079Data.Exp = Convert.ToInt16(args[3]);
+                            });
+                            return new string[] { "Done" };
+                        }
+                    case "max_ap":
+                        {
+                            if (args.Length < 3) return new string[] { "Unknown args!", "em controll079 lvl/xp/max_ap/ap/regen_ap [number]" };
+                            plugin.Server.GetPlayers(Role.SCP_079).ForEach(player => {
+                                player.Scp079Data.MaxAP = Convert.ToInt16(args[3]);
+                            });
+                            return new string[] { "Done" };
+                        }
+                    case "ap":
+                        {
+                            if (args.Length < 3) return new string[] { "Unknown args!", "em controll079 lvl/xp/max_ap/ap/regen_ap [number]" };
+                            plugin.Server.GetPlayers(Role.SCP_079).ForEach(player => {
+                                player.Scp079Data.AP = Convert.ToInt16(args[3]);
+                            });
+                            return new string[] { "Done" };
+                        }
+                    case "regen_ap":
+                        {
+                            if (args.Length < 3) return new string[] { "Unknown args!", "em controll079 lvl/xp/max_ap/ap/regen_ap [number]" };
+                            plugin.Server.GetPlayers(Role.SCP_079).ForEach(player => {
+                                player.Scp079Data.APPerSecond = Convert.ToInt16(args[3]);
+                            });
+                            return new string[] { "Done" };
+                        }
+                    default:
+                        {
+                            return new string[] { "Unknown args!", "em controll079 lvl/xp/max_ap/ap/regen_ap [number]" };
                         }
                 }
             }

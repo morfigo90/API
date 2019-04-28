@@ -58,7 +58,7 @@
     <Compile Include="Events\ToTest\CameleonEvent.cs" />
     <Compile Include="Events\ToTest\ODayEvent.cs" />
     <Compile Include="Events\ToTest\TTTEvent.cs" />
-    <Compile Include="Events\WIP\DMEvent.cs" />
+    <Compile Include="Events\ToTest\DMEvent.cs" />
     <Compile Include="Events\Disabled\DBBREvent.cs" />
     <Compile Include="Events\ToTest\ApoEvent.cs" />
     <Compile Include="Events\ToTest\SearchEvent.cs" />

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace EventManager
 {
-	class RoundEventHandler : IEventHandlerUpdate,IEventHandlerRoundStart,IEventHandlerCheckRoundEnd,IEventHandlerCheckEscape,IEventHandlerRoundRestart,IEventHandlerTeamRespawn,IEventHandlerPocketDimensionEnter,IEventHandlerElevatorUse,IEventHandlerGeneratorFinish,IEventHandlerGeneratorEjectTablet,IEventHandlerPlayerTriggerTesla,IEventHandlerGeneratorAccess,IEventHandlerGeneratorInsertTablet,IEventHandlerPlayerDie,IEventHandlerCallCommand,IEventHandlerPlayerJoin,IEventHandlerWaitingForPlayers,IEventHandlerPlayerHurt,IEventHandlerThrowGrenade,IEventHandlerSpawn,IEventHandlerPlayerDropItem,IEventHandlerMedkitUse,IEventHandlerReload,IEventHandlerSCP914ChangeKnob,IEventHandlerShoot,IEventHandlerPlayerPickupItemLate,IEventHandlerPlayerPickupItem,IEventHandlerDoorAccess,IEventHandlerHandcuffed,IEventHandlerLCZDecontaminate
+	class RoundEventHandler : IEventHandlerUpdate,IEventHandlerRoundStart,IEventHandlerCheckRoundEnd,IEventHandlerCheckEscape,IEventHandlerRoundRestart,IEventHandlerTeamRespawn,IEventHandlerPocketDimensionEnter,IEventHandlerElevatorUse,IEventHandlerGeneratorFinish,IEventHandlerGeneratorEjectTablet,IEventHandlerPlayerTriggerTesla,IEventHandlerGeneratorAccess,IEventHandlerGeneratorInsertTablet,IEventHandlerPlayerDie,IEventHandlerCallCommand,IEventHandlerPlayerJoin,IEventHandlerWaitingForPlayers,IEventHandlerPlayerHurt,IEventHandlerThrowGrenade,IEventHandlerSpawn,IEventHandlerPlayerDropItem,IEventHandlerMedkitUse,IEventHandlerReload,IEventHandlerSCP914ChangeKnob,IEventHandlerShoot,IEventHandlerPlayerPickupItemLate,IEventHandlerPlayerPickupItem,IEventHandlerDoorAccess,IEventHandlerHandcuffed,IEventHandlerLCZDecontaminate,IEventHandlerSCP914Activate
     {
 		private EventManager plugin;
         #region Vars
@@ -24,8 +24,6 @@ namespace EventManager
         int votes = 0;
         int rounds_without_event = 0;
         Player winner;
-        List<string> DM_players = new List<string>();
-        List<string> DM_PRole = new List<string>();
         List<string> TSL_T = new List<string>();
         List<string> TSL_I = new List<string>();
         List<string> TSL_D = new List<string>();
@@ -33,14 +31,14 @@ namespace EventManager
         int TSL_TTK = 0;
         int TSL_ITK = 0;
         int TSL_IKC = 0;
-        int TSL_C_DP = 10;
-        int TSL_C_TP = 30;
+        int TSL_T_DC = 0;
+        int TSL_T_TC = 1;
         Player Cam_SCP = null;
         Player Morbus_Mother = null;
         List<string> Morbus_SCP_hidden = new List<string>();
         List<string> Morbus_SCP_939 = new List<string>();
         bool Morbus_Respawn = false;
-        bool Pin_pre = false;
+        const bool Pin_pre = false;
         List<ItemType> Pin_Ditems = new List<ItemType>();
         List<ItemType> Pin_Sitems = new List<ItemType>();
         Player SCP372 = null;
@@ -1214,38 +1212,36 @@ namespace EventManager
                     Room room = plugin.Server.Map.Get079InteractionRooms(Scp079InteractionType.CAMERA)[i];
                     if (room.ZoneType == ZoneType.HCZ || room.ZoneType == ZoneType.LCZ)
                     {
-                        if (room.RoomType != RoomType.X_INTERSECTION && room.RoomType != RoomType.T_INTERSECTION && room.RoomType != RoomType.CURVE && room.RoomType != RoomType.STRAIGHT)
+                        
+                        Vector pos = new Vector(room.Position.x, room.Position.y + 2, room.Position.z);
+                        int randI = new Random().Next(1, 7);
+                        if (randI == 1)
                         {
-                            Vector pos = new Vector(room.Position.x, room.Position.y + 2, room.Position.z);
-                            int randI = new Random().Next(1, 7);
-                            if (randI == 1)
-                            {
-                                plugin.Server.Map.SpawnItem(ItemType.COM15, pos, new Vector(0, 0, 0));
-                            }
-                            else if (randI == 2)
-                            {
-                                plugin.Server.Map.SpawnItem(ItemType.MEDKIT, pos, new Vector(0, 0, 0));
-                            }
-                            else if (randI == 3)
-                            {
-                                plugin.Server.Map.SpawnItem(ItemType.E11_STANDARD_RIFLE, pos, new Vector(0, 0, 0));
-                            }
-                            else if (randI == 4)
-                            {
-                                plugin.Server.Map.SpawnItem(ItemType.MEDKIT, pos, new Vector(0, 0, 0));
-                            }
-                            else if (randI == 5)
-                            {
-                                plugin.Server.Map.SpawnItem(ItemType.P90, pos, new Vector(0, 0, 0));
-                            }
-                            else if (randI == 6)
-                            {
-                                plugin.Server.Map.SpawnItem(ItemType.MP4, pos, new Vector(0, 0, 0));
-                            }
-                            else if (randI == 7)
-                            {
-                                plugin.Server.Map.SpawnItem(ItemType.LOGICER, pos, new Vector(0, 0, 0));
-                            }
+                            plugin.Server.Map.SpawnItem(ItemType.COM15, pos, new Vector(0, 0, 0));
+                        }
+                        else if (randI == 2)
+                        {
+                            plugin.Server.Map.SpawnItem(ItemType.MEDKIT, pos, new Vector(0, 0, 0));
+                        }
+                        else if (randI == 3)
+                        {
+                            plugin.Server.Map.SpawnItem(ItemType.E11_STANDARD_RIFLE, pos, new Vector(0, 0, 0));
+                        }
+                        else if (randI == 4)
+                        {
+                            plugin.Server.Map.SpawnItem(ItemType.MEDKIT, pos, new Vector(0, 0, 0));
+                        }
+                        else if (randI == 5)
+                        {
+                            plugin.Server.Map.SpawnItem(ItemType.P90, pos, new Vector(0, 0, 0));
+                        }
+                        else if (randI == 6)
+                        {
+                            plugin.Server.Map.SpawnItem(ItemType.MP4, pos, new Vector(0, 0, 0));
+                        }
+                        else if (randI == 7)
+                        {
+                            plugin.Server.Map.SpawnItem(ItemType.LOGICER, pos, new Vector(0, 0, 0));
                         }
                     }
                 }
@@ -1254,23 +1250,56 @@ namespace EventManager
                 TSL_D.Clear();
                 TSL_T.Clear();
                 TSL_I.Clear();
-                while (DC < plugin.Server.NumPlayers * (TSL_C_DP / 100))
+                if(plugin.Server.NumPlayers >= 5)
+                {
+                    TSL_T_DC = 1;
+                }
+                if (plugin.Server.NumPlayers >= 6)
+                {
+                    TSL_T_TC = 2;
+                }
+                if (plugin.Server.NumPlayers >= 10)
+                {
+                    TSL_T_DC = 2;
+                    TSL_T_TC = 3;
+                }
+                if (plugin.Server.NumPlayers >= 14)
+                {
+                    TSL_T_TC = 4;
+                }
+                if (plugin.Server.NumPlayers >= 15)
+                {
+                    TSL_T_DC = 3;
+                }    
+                if (plugin.Server.NumPlayers >= 16)
+                {
+                    TSL_T_TC = 5;
+                }
+                if (plugin.Server.NumPlayers >= 19)
+                {
+                    TSL_T_TC = 6;
+                }
+                if (plugin.Server.NumPlayers >= 20)
+                {
+                    TSL_T_DC = 4;
+                }
+                while (DC < TSL_T_DC)
                 {
                     int rand = new Random().Next(0, plugin.Server.NumPlayers - 1);
                     Player choosen = plugin.Server.GetPlayers()[rand];
                     if (!TSL_D.Contains(choosen.SteamId))
                     {
                         choosen.ChangeRole(Role.SCIENTIST);
-                        TSL_D.Add(choosen.SteamId);
                         choosen.PersonalBroadcast(10, "Jesteś detektywem. Twoje zadanie to zabić zdrajców.", false);
                         choosen.SetAmmo(AmmoType.DROPPED_9, 200);
                         choosen.SetAmmo(AmmoType.DROPPED_5, 100);
                         choosen.SetAmmo(AmmoType.DROPPED_7, 50);
                         choosen.GiveItem(ItemType.P90);
+                        TSL_D.Add(choosen.SteamId);
                         DC++;
                     }
                 }
-                while (TC < plugin.Server.NumPlayers * (TSL_C_TP / 100))
+                while (TC < TSL_T_TC)
                 {
                     int rand = new Random().Next(0, plugin.Server.NumPlayers - 1);
                     Player choosen = plugin.Server.GetPlayers()[rand];
@@ -1281,6 +1310,7 @@ namespace EventManager
                         choosen.SetAmmo(AmmoType.DROPPED_9, 100);
                         choosen.SetAmmo(AmmoType.DROPPED_5, 50);
                         choosen.SetAmmo(AmmoType.DROPPED_7, 300);
+                        choosen.GiveItem(ItemType.GUARD_KEYCARD);
                         TSL_T.Add(choosen.SteamId);
                         TC++;
                     }
@@ -1422,8 +1452,8 @@ namespace EventManager
                 Morbus_Mother = plugin.Server.GetPlayers()[rand];
                 plugin.Server.GetPlayers()[rand].ChangeRole(Role.CLASSD);
                 plugin.Server.GetPlayers()[rand].SetHealth(700);
-                plugin.Server.GetPlayers()[rand].PersonalBroadcast(10, "Jesteś SCP 939 'Matka'. Za 2 minuty otrzymasz kubek. Jeśli go wyrzucisz staniesz się scp 939. Aby zamienić się spowrotem wpisz .z w konsoli pod ~. Twoje zadanie to zabic klasy D. Jeśli umrzesz to przegrywasz.", false);
-                plugin.Server.GetPlayers()[rand].PersonalBroadcast(10, "Jeśli kogoś zabijesz to staje się on ukrytym 939. Jeśli ukryty 939 umrze staje sie zwykłym 939", false);
+                plugin.Server.GetPlayers()[rand].PersonalBroadcast(10, "Jesteś SCP 939 'Matka'. Za 2 minuty otrzymasz kubek. Jeśli go wyrzucisz staniesz się scp 939. Aby zamienić się spowrotem wpisz .z w konsoli pod ~.", false);
+                plugin.Server.GetPlayers()[rand].PersonalBroadcast(10, "Twoje zadanie to zabic klasy D. Jeśli umrzesz to przegrywasz. Jeśli kogoś zabijesz to staje się on ukrytym 939. Jeśli ukryty 939 umrze staje sie zwykłym 939.", false);
                 EventManager.T1 = DateTime.Now.AddMinutes(2);
                 EventManager.T1W = "Morbus";
                 EventManager.TB1 = true;
@@ -2137,7 +2167,8 @@ namespace EventManager
                                 plugin.Server.GetPlayers().ForEach(player => {
                                     if(TSL_T.Contains(player.SteamId))
                                     {
-                                        player.GiveItem(ItemType.COM15);
+                                        player.GiveItem(ItemType.LOGICER);
+                                        player.GiveItem(ItemType.FRAG_GRENADE);
                                     }
                                 });
                                 plugin.Server.Map.Broadcast(10, "Traitorzy otrzymali swoją broń", false);
@@ -3086,7 +3117,7 @@ namespace EventManager
                 {
                     if (PlayerRole == "T")
                     {
-                        plugin.Server.Map.Broadcast(5, "Zdrajca(" + ev.Killer.Name + ") zabił Zdrajce(" + ev.Player.Name + ")", false);
+                        plugin.Server.Map.Broadcast(5, "Zdrajca(" + "[REDACTED]" + ") zabił Zdrajce(" + ev.Player.Name + ")", false);
                         TSL_TTK++;
                     }
                     else if (PlayerRole == "I")
@@ -3214,6 +3245,15 @@ namespace EventManager
 
         public void OnPlayerHurt(PlayerHurtEvent ev)
         {
+            if(EventManager.ActiveEvent == "TSL")
+            {
+                if(ev.Player.GetHealth()-ev.Damage <= 0)
+                {
+                    ev.Player.GetInventory().ForEach(item => {
+                        if (item.ItemType == ItemType.GUARD_KEYCARD) item.Remove();
+                    });
+                }
+            }
             if(ev.DamageType == DamageType.USP && EventManager.ActiveEvent == "TSL")
             {
                 if(TSL_T.Contains(ev.Player.SteamId) && !TSL_T.Contains(ev.Attacker.SteamId))
@@ -3222,11 +3262,13 @@ namespace EventManager
                 } else if(!TSL_T.Contains(ev.Player.SteamId) && TSL_T.Contains(ev.Attacker.SteamId))
                 {
                     ev.Damage = 10000;
-                } else if(TSL_T.Contains(ev.Player.SteamId) && TSL_T.Contains(ev.Attacker.SteamId))
+                }
+                else if(TSL_T.Contains(ev.Player.SteamId) && TSL_T.Contains(ev.Attacker.SteamId))
                 {
                     ev.Damage = 0;
                     ev.Attacker.Kill(DamageType.USP);
-                } else if(!TSL_T.Contains(ev.Player.SteamId) && !TSL_T.Contains(ev.Attacker.SteamId))
+                }
+                else if(!TSL_T.Contains(ev.Player.SteamId) && !TSL_T.Contains(ev.Attacker.SteamId))
                 {
                     ev.Damage = 0;
                     ev.Attacker.Kill(DamageType.USP);
@@ -3793,6 +3835,26 @@ namespace EventManager
                     ev.Allow = true;
                 }
             }
+            else if(EventManager.ActiveEvent == "TSL")
+            {
+                if(ev.Door.Name == "LCZ_ARMORY")
+                {
+                    if(TSL_T.Contains(ev.Player.SteamId))
+                    {
+                        if(ev.Player.GetCurrentItem().ItemType == ItemType.GUARD_KEYCARD)
+                        {
+                            ev.Allow = true;
+                        } else
+                        {
+                            ev.Allow = false;
+                        } 
+                    }
+                    else
+                    {
+                        ev.Allow = false;
+                    }
+                }
+            }
         }
 
         public void OnHandcuffed(PlayerHandcuffedEvent ev)
@@ -3819,6 +3881,25 @@ namespace EventManager
                     }
                 });
             }
+        }
+
+        public void OnSCP914Activate(SCP914ActivateEvent ev)
+        {
+            ev.Inputs = new object[] { };
+            ev.KnobSetting = KnobSetting.ROUGH;
+            plugin.Server.GetPlayers().ForEach(player => {
+                if(Vector.Distance(player.GetPosition(),ev.IntakePos) <= 2)
+                {
+                    if(TSL_T.Contains(player.SteamId))
+                    {
+                        player.Teleport(ev.OutputPos);
+                    }
+                    else
+                    {
+                        player.Teleport(ev.IntakePos);
+                    }
+                }
+            });
         }
     }
 }

@@ -15,3 +15,8 @@ Patch_2
 -zmieniono uruchamanie eventów. Teraz aby uruchomiæ event "WIP" nale¿y dodaæ na koñcu komendy argument "-e"
 Patch_3
 -ztworzono od nowa event:"DM"
+-poprawiono event:"TSL"
+Patch_4
+-dodano komendê:"controll079"
+-zmieniono broñ zdrajcy z Com15 na Logicer
+-dodano dodatkow¹ broñ dla zdrajcy w eventcie:"TSL"- granat od³amkowy
