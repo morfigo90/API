@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "ODay";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:Przeciwny dzień", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":Przeciwny dzień", false);
             EventManager.ToDSC.Initate(admin, "ODay", forced);
         }
     }

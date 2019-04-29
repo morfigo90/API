@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "WINauki";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:W imię nauki", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":W imię nauki", false);
             EventManager.ToDSC.Initate(admin, "WINauki", forced);
         }
     }

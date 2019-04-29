@@ -24,4 +24,15 @@ Patch_4
 -zamkniêto zbrojowniê
 -od teraz tylko zdrajcy mog¹ otwieraæ zbrojowniê
 -dodano dodatkowy startowy item dla zdrajcy-karta guarda
--po œmierci zdrajcy karta znika
+-po œmierci zdrajcy jego karta znika
+-poprawiono versjê versji.
+Patch_5
+-poprawiono TSL
+Patch_6
+-dodano komendy(mlock,munlock,mopen,mclose,mdestroy)
+-dodano dekontaminacjê cel klas D
+-poprawiono BDeath
+-dodano now¹ klasê MTF-Technik(domyœlnie wy³¹czone, configbool:cc_mtf_tech)
+-dodano now¹ klasê MTF-Medyk(domyœlnie wy³¹czone, configbool:cc_mtf_medic)
+-dodano now¹ klasê Ochroniarza-Starszy ochroniarz(domyœlnie wy³¹czone, configbool:cc_fg_sfg)
+-added part translation

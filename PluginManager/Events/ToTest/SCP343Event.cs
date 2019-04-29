@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "343";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:343 Breakout", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":343 Breakout", false);
             EventManager.ToDSC.Initate(admin, "343", forced);
         }
     }

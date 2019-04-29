@@ -844,6 +844,86 @@ namespace EventManager
                         }
                 }
             }
+            else if(args[0].ToLower() == "mlock")
+            {
+                List<string> args2 = new List<string>();
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args2.Add(args[i]);
+                }
+                EventManager.ToDSC.CommandCalled(admin, admin, "mlock", args2.ToArray());
+                plugin.Server.GetPlayers().ForEach(player => {
+                    if(player.ToString() == sender.ToString())
+                    {
+                        EventManager.mlock.Add(player.SteamId);
+                    }
+                });
+                return new string[] { "Done" };
+            }
+            else if (args[0].ToLower() == "munlock")
+            {
+                List<string> args2 = new List<string>();
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args2.Add(args[i]);
+                }
+                EventManager.ToDSC.CommandCalled(admin, admin, "munlock", args2.ToArray());
+                plugin.Server.GetPlayers().ForEach(player => {
+                    if (player.ToString() == sender.ToString())
+                    {
+                        EventManager.munlock.Add(player.SteamId);
+                    }
+                });
+                return new string[] { "Done" };
+            }
+            else if (args[0].ToLower() == "mopen")
+            {
+                List<string> args2 = new List<string>();
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args2.Add(args[i]);
+                }
+                EventManager.ToDSC.CommandCalled(admin, admin, "mopen", args2.ToArray());
+                plugin.Server.GetPlayers().ForEach(player => {
+                    if (player.ToString() == sender.ToString())
+                    {
+                        EventManager.mopen.Add(player.SteamId);
+                    }
+                });
+                return new string[] { "Done" };
+            }
+            else if (args[0].ToLower() == "mclose")
+            {
+                List<string> args2 = new List<string>();
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args2.Add(args[i]);
+                }
+                EventManager.ToDSC.CommandCalled(admin, admin, "mclose", args2.ToArray());
+                plugin.Server.GetPlayers().ForEach(player => {
+                    if (player.ToString() == sender.ToString())
+                    {
+                        EventManager.mclose.Add(player.SteamId);
+                    }
+                });
+                return new string[] { "Done" };
+            }
+            else if (args[0].ToLower() == "mdestroy")
+            {
+                List<string> args2 = new List<string>();
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args2.Add(args[i]);
+                }
+                EventManager.ToDSC.CommandCalled(admin, admin, "mdestroy", args2.ToArray());
+                plugin.Server.GetPlayers().ForEach(player => {
+                    if (player.ToString() == sender.ToString())
+                    {
+                        EventManager.mdestroy.Add(player.SteamId);
+                    }
+                });
+                return new string[] { "Done" };
+            }
             else if (args[0].ToLower() == "info")
             {
                 List<string> args2 = new List<string>();
@@ -879,6 +959,32 @@ namespace EventManager
                 if (args.Length == 1) return new string[] { "Wrong args em error [message]" };
                 EventManager.ToDSC.Error(args[1]);
                 return new string[] { "Done" };
+            }
+            else if(args[0].ToLower() == "dnask")
+            {
+                List<string> args2 = new List<string>();
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args2.Add(args[i]);
+                }
+                EventManager.ToDSC.CommandCalled(admin, admin, "dnask", args2.ToArray());
+                int maxi = 10;
+                int mini = 0;
+                if (args.Length != 1) maxi = Convert.ToInt16(args[1]);
+                if (args.Length != 2 && args.Length != 1) mini = Convert.ToInt16(args[2]);
+                string output = "";
+                for (int i = mini; i < maxi; i++)
+                {
+                    for (int j = 0; j < 10; j++)
+                    {
+                        if(j != 0 || i != 0)
+                        {
+                            output += "PITCH_" + i + "," + j + " " + (i * 10 + j) + " CLASSD r r r ";
+                        }
+                    }
+                }
+                plugin.Server.Map.AnnounceCustomMessage(output); ;
+                return new string[] { ":)" };
             }
             else
             {

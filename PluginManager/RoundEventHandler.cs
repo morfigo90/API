@@ -33,6 +33,9 @@ namespace EventManager
         int TSL_IKC = 0;
         int TSL_T_DC = 0;
         int TSL_T_TC = 1;
+        bool DCDC = false;
+        bool DCDC_2 = false;
+        bool DCDC_3 = false;
         Player Cam_SCP = null;
         Player Morbus_Mother = null;
         List<string> Morbus_SCP_hidden = new List<string>();
@@ -260,13 +263,18 @@ namespace EventManager
 
             votes = 0;
             EventManager.RoundStarted = true;
+            EventManager.T_DD = DateTime.Now.AddMinutes(5).AddSeconds(30);
+            DCDC = plugin.GetConfigBool("decontaminate_classd");
+            DCDC_2 = false;
+            DCDC_3 = false;
             winner = null;
+            #region Events
             if (EventManager.ActiveEvent == "WINauki")
             {
                 if (plugin.Server.NumPlayers <= 3 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)"+(EventManager.TranslationsEnabled?plugin.GetTranslation("event_nep"): "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 bool is173 = false, is106 = false, is096 = false, is049 = false, is939_53 = false, is939_89 = false, is079 = false;
@@ -288,7 +296,7 @@ namespace EventManager
                 if (scpcount == 0)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)"+ (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 int asc = 0;
@@ -374,7 +382,7 @@ namespace EventManager
                 {
                     if (player.TeamRole.Team == Smod2.API.Team.SCP)
                     {
-                        player.PersonalBroadcast(10, "Jesteś SCP. Twoje zadanie to nie pozwolić naukowcom uciec.", false);
+                        player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_win_scp") : "Jesteś SCP. Twoje zadanie to nie pozwolić naukowcom uciec."), false);
                     }
                     else
                     {
@@ -382,7 +390,7 @@ namespace EventManager
                         EventManager.T1 = DateTime.Now.AddSeconds(1);
                         EventManager.TB1 = true;
                         EventManager.T1W = "WINauki";
-                        player.PersonalBroadcast(10, "Jesteś naukowcem. Twoje zadanie to uciec z placówki.", false);
+                        player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_win_sci") : "Jesteś naukowcem. Twoje zadanie to uciec z placówki."), false);
                     }
                 });
             }
@@ -391,7 +399,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.DisableRespawns = true;
@@ -400,7 +408,7 @@ namespace EventManager
                 {
                     player.ChangeRole(Role.CLASSD);
                 });
-                plugin.Server.Map.Broadcast(10, "Jesteś klasą D. Twoje zadanie to uciec z placówki!", false);
+                plugin.Server.Map.Broadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_whr_d") : "Jesteś klasą D. Twoje zadanie to uciec z placówki!"), false);
                 plugin.Server.Map.AnnounceCustomMessage("nato_a warhead will be initiated in t minus 1 minute");
                 EventManager.T1 = DateTime.Now.AddMinutes(1).AddSeconds(8);
                 EventManager.TB1 = true;
@@ -419,7 +427,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 3)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 if (plugin.Server.NumPlayers >= scp1)
@@ -456,9 +464,9 @@ namespace EventManager
                 }
                 else
                 {
-                    plugin.Server.Map.Broadcast(5, "(EventManager.Chowany)Error:Nieznana strefa!" + rand, false);
+                    plugin.Debug("(EventManager.Chowany)Error:Nieznana strefa!" + rand);
                 }
-                if (Chowany_Strefa == "") { EventManager.ActiveEvent = ""; plugin.Server.Map.Broadcast(5, "(EventManager.Chowany)Error:Nieznana strefa!@" + rand, false); }
+                if (Chowany_Strefa == "") { EventManager.ActiveEvent = ""; plugin.Debug("(EventManager.Chowany)Error:Nieznana strefa!@" + rand); }
                 else
                 {
                     int scpc = 0;
@@ -476,7 +484,7 @@ namespace EventManager
                         {
                             scpc++;
                             player.ChangeRole(Role.CLASSD);
-                            player.PersonalBroadcast(10, "Jesteś klasą D. Twoje zadanie to przeżyć.", false);
+                            player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_hs_d") : "Jesteś klasą D. Twoje zadanie to przeżyć."), false);
                             foreach (Room room in plugin.Server.Map.Get079InteractionRooms(Scp079InteractionType.CAMERA))
                             {
                                 if (Chowany_Strefa == "LCZ")
@@ -508,7 +516,7 @@ namespace EventManager
                         else if (player.TeamRole.Team != Team.SCP && player.TeamRole.Team != Team.NONE)
                         {
                             player.ChangeRole(Role.CLASSD);
-                            player.PersonalBroadcast(10, "Jesteś klasą D. Twoje zadanie to przeżyć.", false);
+                            player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_hs_d") : "Jesteś klasą D. Twoje zadanie to przeżyć."), false);
                             foreach (Room room in plugin.Server.Map.Get079InteractionRooms(Scp079InteractionType.CAMERA))
                             {
                                 if (Chowany_Strefa == "LCZ")
@@ -540,7 +548,7 @@ namespace EventManager
                         if (player.TeamRole.Team == Team.SCP)
                         {
                             player.ChangeRole(Role.SCP_939_53);
-                            player.PersonalBroadcast(10, "Za 30 sekund zostaniesz przeniesiony. Twoje zadanie to zabić wszystkie klasy D.", false);
+                            player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_hs_scp") : "Za 30 sekund zostaniesz przeniesiony. Twoje zadanie to zabić wszystkie klasy D."), false);
                             player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.NTF_COMMANDER));
                         }
                     });
@@ -553,7 +561,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.DisableRespawns = true;
@@ -563,7 +571,7 @@ namespace EventManager
                     player.ChangeRole(Role.CLASSD);
                     player.Teleport(plugin.Server.Map.GetSpawnPoints(Role.SCP_106)[0]);
                 });
-                plugin.Server.Map.Broadcast(10, "Twoje zadanie to przeżyć. Granaty respią się co 30 sekund a każdy następny sekundę mniej.", false);
+                plugin.Server.Map.Broadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_ach_d") : "Twoje zadanie to przeżyć. Granaty respią się co 30 sekund a każdy następny sekundę mniej."), false);
                 EventManager.T1W = "Achtung";
                 EventManager.T1 = DateTime.Now.AddSeconds(30);
                 EventManager.TB1 = true;
@@ -573,7 +581,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.DisableRespawns = true;
@@ -582,7 +590,7 @@ namespace EventManager
                 int rand = new Random().Next(plugin.Server.NumPlayers - 1);
                 Player p106 = plugin.Server.GetPlayers()[rand];
                 p106.ChangeRole(Role.SCP_106);
-                p106.PersonalBroadcast(10, "Jesteś Czarną Śmiercią. Twoje zadanie to zabić klasy D zanim uruchomią wszystkie generatory.", false);
+                p106.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_bd_scp") : "Jesteś Czarną Śmiercią. Twoje zadanie to zabić klasy D zanim uruchomią wszystkie generatory."), false);
                 plugin.Server.GetPlayers().ForEach(player =>
                 {
                     if (player.GetAuthToken() != p106.GetAuthToken())
@@ -596,7 +604,7 @@ namespace EventManager
                             if (room.RoomType == RoomType.NUKE)
                             {
                                 player.Teleport(new Vector(room.Position.x, room.Position.y + 2, room.Position.z));
-                                player.PersonalBroadcast(10, "Jesteś klasą D. Twoje zadanie to uruchomić wszystkie generatory by zabić Czarną Śmierć.", false);
+                                player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_bd_d") : "Jesteś klasą D. Twoje zadanie to uruchomić wszystkie generatory by zabić Czarną Śmierć."), false);
                             }
 
                         }
@@ -741,7 +749,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 9 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.RoundLocked = true;
@@ -756,7 +764,7 @@ namespace EventManager
                 int rand = new Random().Next(0, plugin.Server.NumPlayers - 1);
                 Player vip = plugin.Server.GetPlayers()[rand];
                 vip.ChangeRole(Role.SCIENTIST);
-                vip.PersonalBroadcast(10, "Jesteś VIPem twoje zadanie to przeżyć i uciec z pomocą MTF.", false);
+                vip.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_vip_vip") : "Jesteś VIP-em twoje zadanie to przeżyć i uciec z pomocą MTF."), false);
                 vip.SetHealth(600);
                 vip.Teleport(plugin.Server.Map.GetSpawnPoints(Role.SCP_173)[0]);
                 int commanders = 0;
@@ -770,7 +778,7 @@ namespace EventManager
                         tmp1.ChangeRole(Role.NTF_COMMANDER);
                         tmp1.GiveItem(ItemType.MICROHID);
                         tmp1.Teleport(plugin.Server.Map.GetSpawnPoints(Role.SCP_173)[0]);
-                        tmp1.PersonalBroadcast(10, "Jesteś Dowódcą. Twoje zadanie to eskortować naukowca", false);
+                        tmp1.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_vip_scp") : "Jesteś Dowódcą. Twoje zadanie to eskortować naukowca"), false);
                         commanders++;
                     }
                 }
@@ -782,17 +790,17 @@ namespace EventManager
                         Player tmp1 = plugin.Server.GetPlayers()[rand];
                         tmp1.ChangeRole(Role.NTF_LIEUTENANT);
                         tmp1.Teleport(plugin.Server.Map.GetSpawnPoints(Role.SCP_173)[0]);
-                        tmp1.PersonalBroadcast(10, "Jesteś Porucznikiem. Twoje zadanie to eskortować naukowca", false);
+                        tmp1.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_vip_scp") : "Jesteś Porucznikiem. Twoje zadanie to eskortować naukowca"), false);
                         lieutenant++;
                     }
                 }
                 plugin.Server.GetPlayers().ForEach(player => {
                     if(player.TeamRole.Team == Team.CHAOS_INSURGENCY)
                     {
-                        player.PersonalBroadcast(10, "Jesteś Rebelią Chaosu. Twoje zadanie to nie pozwolić zabic naukowca.", false);
+                        player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_vip_ci") : "Jesteś Rebelią Chaosu. Twoje zadanie to nie pozwolić zabic naukowca."), false);
                     } else if(player.TeamRole.Team == Team.SCP)
                     {
-                        player.PersonalBroadcast(10, "Jesteś podmiotem SCP. Twoje zadanie to nie pozwolić zabic naukowca.", false);
+                        player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_vip_scp") : "Jesteś podmiotem SCP. Twoje zadanie to nie pozwolić zabic naukowca."), false);
                     }
                 });
             }
@@ -801,7 +809,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.DisableRespawns = true;
@@ -823,7 +831,7 @@ namespace EventManager
                     if (t1.TeamRole.Role != Role.SCP_173)
                     {
                         t1.ChangeRole(Role.SCP_173);
-                        t1.PersonalBroadcast(10, "Jesteś 173. Twoje zadanie to zabić klasy D. Za 30 sekund zostaniesz przeniesiony", false);
+                        t1.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_fight173_scp") : "Jesteś 173. Twoje zadanie to zabić klasy D. Za 30 sekund zostaniesz przeniesiony"), false);
                         c173++;
                     }
                 }
@@ -832,7 +840,7 @@ namespace EventManager
                     if (player.TeamRole.Team != Team.SCP)
                     {
                         player.Teleport(plugin.Server.Map.GetSpawnPoints(Role.SCP_106)[0]);
-                        player.PersonalBroadcast(10, "Jesteś klasą D. Twoje zadanie to z przeżyć.", false);
+                        player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_fight173_d") : "Jesteś klasą D. Twoje zadanie to z przeżyć."), false);
                     }
                 });
                 EventManager.T1W = "Fight173";
@@ -844,7 +852,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 plugin.Server.GetPlayers().ForEach(player =>
@@ -859,7 +867,7 @@ namespace EventManager
                     }
                     player.GiveItem(ItemType.FLASHLIGHT);
                 });
-                plugin.Server.Map.Broadcast(10, "Jest to zwykła runda. Prawie.", false);
+                plugin.Server.Map.Broadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_bo") : "Jest to zwykła runda. Prawie."), false);
                 EventManager.BlackOut = true;
                 EventManager.T_BO = DateTime.Now.AddSeconds(1);
             }
@@ -868,7 +876,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.DisableRespawns = true;
@@ -904,14 +912,14 @@ namespace EventManager
                     int rand = new Random().Next(0, plugin.Server.NumPlayers - 1);
                     Player choosen = plugin.Server.GetPlayers()[rand];
                     choosen.ChangeRole(Role.SCP_173);
-                    choosen.PersonalBroadcast(10, "Jesteś SCP 173. Twoje zadanie to zabić klasy D zanim uciekną", false);
+                    choosen.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_run123_scp") : "Jesteś SCP 173. Twoje zadanie to zabić klasy D zanim uciekną"), false);
                     c173c++;
                 }
                 plugin.Server.GetPlayers().ForEach(player =>
                 {
                     if (player.TeamRole.Role == Role.CLASSD)
                     {
-                        player.PersonalBroadcast(10, "Jesteś klasą D . Twoje zadanie to uciec", false);
+                        player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_run123_d") : "Jesteś klasą D . Twoje zadanie to uciec"), false);
                     }
                 });
             }
@@ -920,11 +928,12 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.RoundLocked = true;
                 EventManager.DisableRespawns = true;
+                plugin.Server.Map.Broadcast(5, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_ld") : "Uwaga! Mogą wystąpić chwilowe lagi!"), false);
                 plugin.Server.Map.GetElevators().ForEach(elevator =>
                 {
                     if (elevator.Lockable) elevator.Locked = true;
@@ -1002,7 +1011,7 @@ namespace EventManager
                     player.ChangeRole(Role.CLASSD);
                     player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.NTF_COMMANDER));
                 });
-                plugin.Server.Map.Broadcast(10, "Jesteś klasą D. Twoje zadanie to znaleść Micro-HID i uciec z nim. Kto pierwszy ten lepszy. Możecie się zabijać.", false);
+                plugin.Server.Map.Broadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_search_d") : "Jesteś klasą D. Twoje zadanie to znaleść Micro-HID i uciec z nim. Kto pierwszy ten lepszy. Możecie się zabijać."), false);
                 plugin.Server.Map.GetDoors().ForEach(door =>
                 {
                     if (door.Name == "GATE_A" || door.Name == "GATE_B" || door.Name == "CHECKPOINT_ENT" || door.Name == "096" || door.Name == "106_BOTTOM" || door.Name == "106_PRIMARY" || door.Name == "106_SECONDARY" || door.Name == "NUKE_ARMORY" || door.Name == "049_ARMORY" || door.Name == "079_FIRST" || door.Name == "079_SECOND" || door.Name == "HCZ_ARMORY")
@@ -1023,7 +1032,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.RoundLocked = true;
@@ -1046,14 +1055,14 @@ namespace EventManager
                             player.ChangeRole(Role.CLASSD);
                             player.GiveItem(ItemType.USP);
                             player.SetAmmo(AmmoType.DROPPED_9, 100);
-                            player.PersonalBroadcast(10, "Jesteś klasą D. Twoje zadanie uciec. Jeśli umrzesz zostaniesz zombie", false);
+                            player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_apo_d") : "Jesteś klasą D. Twoje zadanie uciec. Jeśli umrzesz zostaniesz zombie"), false);
                             first = false;
                         }
                         else
                         {
                             player.ChangeRole(Role.SCP_049_2);
                             player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.SCP_173));
-                            player.PersonalBroadcast(10, "Jesteś zombie. Twoje zadanie to zabić klasy D i nie pozwolić im uciec.", false);
+                            player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_apo_scp") : "Jesteś zombie. Twoje zadanie to zabić klasy D i nie pozwolić im uciec."), false);
                         }
 
                     }
@@ -1062,7 +1071,7 @@ namespace EventManager
                         player.ChangeRole(Role.CLASSD);
                         player.GiveItem(ItemType.USP);
                         player.SetAmmo(AmmoType.DROPPED_9, 100);
-                        player.PersonalBroadcast(10, "Jesteś klasą D. Twoje zadanie uciec. Jeśli umrzesz zostaniesz zombie", false);
+                        player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_apo_d") : "Jesteś klasą D. Twoje zadanie uciec. Jeśli umrzesz zostaniesz zombie"), false);
                     }
                 });
             }
@@ -1071,7 +1080,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 1 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 DBBR_D = false;
@@ -1123,7 +1132,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 3 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 #region old
@@ -1190,7 +1199,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 3 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.DisableRespawns = true;
@@ -1290,7 +1299,7 @@ namespace EventManager
                     if (!TSL_D.Contains(choosen.SteamId))
                     {
                         choosen.ChangeRole(Role.SCIENTIST);
-                        choosen.PersonalBroadcast(10, "Jesteś detektywem. Twoje zadanie to zabić zdrajców.", false);
+                        choosen.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_tsl_d") : "Jesteś detektywem. Twoje zadanie to zabić zdrajców."), false);
                         choosen.SetAmmo(AmmoType.DROPPED_9, 200);
                         choosen.SetAmmo(AmmoType.DROPPED_5, 100);
                         choosen.SetAmmo(AmmoType.DROPPED_7, 50);
@@ -1306,7 +1315,7 @@ namespace EventManager
                     if (!TSL_T.Contains(choosen.SteamId) && !TSL_D.Contains(choosen.SteamId))
                     {
                         choosen.ChangeRole(Role.CLASSD);
-                        choosen.PersonalBroadcast(10, "Jesteś zdrajcą. Twoje zadanie to zabić niewinnych i detektywów.", false);
+                        choosen.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_tsl_t") : "Jesteś zdrajcą. Twoje zadanie to zabić niewinnych i detektywów."), false);
                         choosen.SetAmmo(AmmoType.DROPPED_9, 100);
                         choosen.SetAmmo(AmmoType.DROPPED_5, 50);
                         choosen.SetAmmo(AmmoType.DROPPED_7, 300);
@@ -1315,12 +1324,24 @@ namespace EventManager
                         TC++;
                     }
                 }
+                string names = "";
                 plugin.Server.GetPlayers().ForEach(player =>
                 {
+                    if(TSL_T.Contains(player.SteamId))
+                    {
+                        names = names + player.Name+"\n";
+                    }
+                });
+                plugin.Server.GetPlayers().ForEach(player =>
+                {
+                    if(TSL_T.Contains(player.SteamId))
+                    {
+                        player.SendConsoleMessage(EventManager.TranslationsEnabled ? plugin.GetTranslation("event_tsl_tm")+":\n"+names : "Traitorzy"+":\n"+names);
+                    }
                     if (!TSL_T.Contains(player.SteamId) && !TSL_D.Contains(player.SteamId) && !TSL_I.Contains(player.SteamId))
                     {
                         player.ChangeRole(Role.CLASSD);
-                        player.PersonalBroadcast(10, "Jesteś niewinny. Twoje zadanie to pomóc detektywowi zabić zdrajców.", false);
+                        player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_tsl_i") : "Jesteś niewinny. Twoje zadanie to pomóc detektywowi zabić zdrajców."), false);
                         player.SetAmmo(AmmoType.DROPPED_7, 50);
                         player.SetAmmo(AmmoType.DROPPED_7, 50);
                         player.SetAmmo(AmmoType.DROPPED_7, 50);
@@ -1334,7 +1355,7 @@ namespace EventManager
             else if (EventManager.ActiveEvent == "ODay")
             {
                 plugin.Server.Map.AnnounceCustomMessage("Alert . Alert . doctor . . . spotted in facility . Full site alert initiated . Code red . Scanning for facility damage");
-                plugin.Server.Map.Broadcast(20, "Transkrypcja:Alarm. Alarm. Doktor Bright wykryty w placówce. Alarm całej strefy uruchomiony. Kod czerwony. Skanowanie w poszukiwaniu uszkodzień placówki.", false);
+                plugin.Server.Map.Broadcast(20, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_oday") : "Transkrypcja:Alarm. Alarm. Doktor Bright wykryty w placówce. Alarm całej strefy uruchomiony. Kod czerwony. Skanowanie w poszukiwaniu uszkodzień placówki."), false);
                 plugin.Server.Map.GetDoors().ForEach(door =>
                 {
                     if (door.Name == "GATE_A" || door.Name == "GATE_B" || door.Name == "079_FIRST")
@@ -1349,7 +1370,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 int rand = new Random().Next(0, plugin.Server.NumPlayers - 1);
@@ -1372,17 +1393,17 @@ namespace EventManager
                 Cam_SCP.SetAmmo(AmmoType.DROPPED_5, 150);
                 Cam_SCP.SetAmmo(AmmoType.DROPPED_7, 150);
                 Cam_SCP.SetAmmo(AmmoType.DROPPED_9, 150);
-                Cam_SCP.PersonalBroadcast(10, "Jesteś SCP-Kameleon. Twoje zadanie to zabić wszystkich poza SCP. SCP nie mogą cię skrzywdzić(poza teslą).", false);
-                Cam_SCP.PersonalBroadcast(10, "W ekwipunku masz pistolet,kartę O5,monetę,kartę sprzątacza,tablet.", false);
-                Cam_SCP.PersonalBroadcast(10, "Po wyrzuceniu monety przybierasz postać klasy D, Karta sprzątacza - Naukowiec,Tablet - Tutorial,Masz 3000 hp. Nie możesz zadawać obrażeń w innej formie niż tutorial.", false);
-                Cam_SCP.PersonalBroadcast(10, "Nie możesz ranić SCP. Powodzenia", false);
+                Cam_SCP.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_cameleon_m_1") : "Jesteś SCP-Kameleon. Twoje zadanie to zabić wszystkich poza SCP. SCP nie mogą cię skrzywdzić(poza teslą)."), false);
+                Cam_SCP.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_cameleon_m_2") : "W ekwipunku masz pistolet,kartę O5,monetę,kartę sprzątacza,tablet."), false);
+                Cam_SCP.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_cameleon_m_3") : "Po wyrzuceniu monety przybierasz postać klasy D, Karta sprzątacza - Naukowiec,Tablet - Tutorial,Masz 3000 hp. Nie możesz zadawać obrażeń w innej formie niż tutorial."), false);
+                Cam_SCP.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_cameleon_m_4") : "Nie możesz ranić SCP. Powodzenia"), false);
             }
             else if (EventManager.ActiveEvent == "Morbus")
             {
                 if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.BlackOut = true;
@@ -1452,8 +1473,9 @@ namespace EventManager
                 Morbus_Mother = plugin.Server.GetPlayers()[rand];
                 plugin.Server.GetPlayers()[rand].ChangeRole(Role.CLASSD);
                 plugin.Server.GetPlayers()[rand].SetHealth(700);
-                plugin.Server.GetPlayers()[rand].PersonalBroadcast(10, "Jesteś SCP 939 'Matka'. Za 2 minuty otrzymasz kubek. Jeśli go wyrzucisz staniesz się scp 939. Aby zamienić się spowrotem wpisz .z w konsoli pod ~.", false);
-                plugin.Server.GetPlayers()[rand].PersonalBroadcast(10, "Twoje zadanie to zabic klasy D. Jeśli umrzesz to przegrywasz. Jeśli kogoś zabijesz to staje się on ukrytym 939. Jeśli ukryty 939 umrze staje sie zwykłym 939.", false);
+                plugin.Server.GetPlayers()[rand].PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_morbus_m_1") : "Jesteś SCP 939 'Matka'. Za 2 minuty otrzymasz kubek. Jeśli go wyrzucisz staniesz się scp 939. Aby zamienić się spowrotem wpisz .z w konsoli pod ~."), false);
+                plugin.Server.GetPlayers()[rand].PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_morbus_m_2") : "Twoje zadanie to zabic klasy D. Jeśli umrzesz to przegrywasz. Jeśli kogoś zabijesz to staje się on ukrytym 939. Jeśli ukryty 939 umrze staje sie zwykłym 939."), false);
+                plugin.Server.GetPlayers()[rand].PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_morbus_m_3") : "Jeśli wszystkie generatory zostaną uruchomione to podczas overchargu umrzesz."), false);
                 EventManager.T1 = DateTime.Now.AddMinutes(2);
                 EventManager.T1W = "Morbus";
                 EventManager.TB1 = true;
@@ -1462,7 +1484,7 @@ namespace EventManager
                     if (player.SteamId != Morbus_Mother.SteamId)
                     {
                         player.ChangeRole(Role.CLASSD);
-                        player.PersonalBroadcast(10, "Jesteś klasą D. Twoje zadanie to przeżyć. Uważaj na SCP 939 'Matka'.", false);
+                        player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_morbus_d") : "Jesteś klasą D. Twoje zadanie to przeżyć. Uważaj na SCP 939 'Matka'. Uruchom wszystkie generatory by zabić SCP 939 i wygrać."), false);
                     }
                     player.GiveItem(ItemType.FLASHLIGHT);
                 });
@@ -1473,7 +1495,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 5 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.DisableRespawns = true;
@@ -1694,23 +1716,26 @@ namespace EventManager
             }
             else if (EventManager.ActiveEvent == "Spy")
             {
-                plugin.Server.Map.Broadcast(10,"Ten event jest tylko place holderem!",false);
+                plugin.Server.Map.Broadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_ph") : "Ten event jest tylko place holderem!"), false);
             }
             else if (EventManager.ActiveEvent == "372")
             {
                 if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
+                plugin.Server.GetPlayers(Role.SCP_106).ForEach(player => {
+                    player.ChangeRole(Role.SCP_939_53);
+                });
                 EventManager.RoundLocked = true;
                 int rand = new Random().Next(0, plugin.Server.NumPlayers - 1);
                 SCP372 = plugin.Server.GetPlayers()[rand];
                 SCP372.ChangeRole(Role.TUTORIAL);
                 SCP372.SetHealth(300);
                 SCP372.SetRank("silver", "SCP 372", SCP372.GetRankName());
-                SCP372.PersonalBroadcast(10, "Jesteś SCP 372", false);
+                SCP372.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_373_scp") : "Jesteś SCP 372. Jesteś niewidzialny dopóki nie strzelasz,przeładowywujesze,leczysz się,zmieniasz ustawienie 914,podnosisz item"), false);
                 plugin.Server.Map.GetDoors().ForEach(door =>
                 {
                     if (door.Name == "372")
@@ -1727,7 +1752,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 int rand = new Random().Next(0, plugin.Server.NumPlayers - 1);
@@ -1735,21 +1760,21 @@ namespace EventManager
                 SCP343.ChangeRole(Role.TUTORIAL);
                 SCP343.SetGodmode(true);
                 SCP343.SetRank("silver", "SCP 343", SCP343.GetRankName());
-                SCP343.PersonalBroadcast(10, "Jesteś SCP 343. Jesteś bogiem. Jesteś nieśmiertelny oraz możesz otwierać wszystkie drzwi. Każda broń którą podniesiesz staje się monetą lub czymś innym.", false);
+                SCP343.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_343_scp") : "Jesteś SCP 343. Jesteś bogiem. Jesteś nieśmiertelny oraz możesz otwierać wszystkie drzwi. Każda broń którą podniesiesz staje się monetą lub czymś innym."), false);
             }
             else if (EventManager.ActiveEvent == "689")
             {
                 if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 int rand = new Random().Next(0, plugin.Server.NumPlayers - 1);
                 SCP689 = plugin.Server.GetPlayers()[rand];
                 SCP689.ChangeRole(Role.SCP_049);
                 SCP689.SetHealth(5000);
-                SCP689.PersonalBroadcast(10, "Jesteś SCP 689", false);
+                SCP689.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_689_scp") : "Jesteś SCP 689"), false);
                 SCP689.SetRank("silver", "SCP 689", SCP689.GetRankName());
                 EventManager.T1W = "689Attack";
                 EventManager.T1 = DateTime.Now.AddSeconds(60);
@@ -1758,14 +1783,14 @@ namespace EventManager
             else if (EventManager.ActiveEvent == "1499")
             {
                 plugin.Server.Map.SpawnItem(ItemType.COIN, new Vector(+0, +2, +0), new Vector(0, 0, 0));
-                plugin.Server.Map.Broadcast(10, "Ten event to tylko place holder", false);
+                plugin.Server.Map.Broadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_ph") : "Ten event jest tylko place holderem!"), false);
             }
             else if (EventManager.ActiveEvent == "Hunt")
             {
                 if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 Hunt_scpsc = 0;
@@ -1780,7 +1805,7 @@ namespace EventManager
                 plugin.Server.Map.GetElevators().ForEach(elevator => {
                     if (elevator.Lockable) elevator.Locked = true;
                 });
-                plugin.Server.Map.Broadcast(10, "Zadaniem SCP jest zabić MTF i odwrotnie. Jeśli SCP zginie jego zabójca staje się SCP. Powodzenia", false);
+                plugin.Server.Map.Broadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_hunt_main") : "Zadaniem SCP jest zabić MTF i odwrotnie. Jeśli SCP zginie jego zabójca staje się SCP. Powodzenia"), false);
                 plugin.Server.GetPlayers().ForEach(player => {
                     player.ChangeRole(Role.NTF_LIEUTENANT);
                     player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.SCP_939_53));
@@ -1796,7 +1821,7 @@ namespace EventManager
                 if (plugin.Server.NumPlayers <= 2 && !EventManager.DNPN)
                 {
                     EventManager.ActiveEvent = "";
-                    plugin.Server.Map.Broadcast(10, "(EventManager)Niewystarczająca ilość graczy by uruchomić event.", false);
+                    plugin.Server.Map.Broadcast(10, "(EventManager)" + (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_nep") : "Niewystarczająca ilość graczy by uruchomić event."), false);
                     return;
                 }
                 EventManager.DisableRespawns = true;
@@ -1814,15 +1839,26 @@ namespace EventManager
                         player.ChangeRole(Role.SCP_939_53);
                         player.SetHealth(800);
                         player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.CLASSD));
-                        player.PersonalBroadcast(10, "Jesteś SCP. Twoje zadanie to zabić wszystkich MTF przed dekontaminacją LCZ.", false);
+                        player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_plag_scp") : "Jesteś SCP. Twoje zadanie to zabić wszystkich MTF przed dekontaminacją LCZ."), false);
                     }
                     else
                     {
                         player.ChangeRole(Role.NTF_LIEUTENANT);
                         player.Teleport(plugin.Server.Map.GetRandomSpawnPoint(Role.SCIENTIST));
-                        player.PersonalBroadcast(10, "Jesteś MTF. Twoje zadanie to przerzyć do dekontaminacji LCZ. Każdy kto umrze staje się SCP", false);
+                        player.PersonalBroadcast(10, (EventManager.TranslationsEnabled ? plugin.GetTranslation("event_plag_mtf") : "Jesteś MTF. Twoje zadanie to przerzyć do dekontaminacji LCZ. Każdy kto umrze staje się SCP") , false);
                     }
                 });
+            }
+            #endregion
+            if(EventManager.ActiveEvent == "" && plugin.ConfigManager.Config.GetBoolValue("cc_fg_sfg", false))
+            {
+                int rand = new Random().Next(0,plugin.Server.GetPlayers(Role.FACILITY_GUARD).Count-1);
+                plugin.Server.GetPlayers(Role.FACILITY_GUARD)[rand].AddHealth(20);
+                plugin.Server.GetPlayers(Role.FACILITY_GUARD)[rand].GetInventory().ForEach(item => {
+                    if (item.ItemType == ItemType.GUARD_KEYCARD) item.Remove();
+                });
+                plugin.Server.GetPlayers(Role.FACILITY_GUARD)[rand].GiveItem(ItemType.SENIOR_GUARD_KEYCARD);
+                plugin.Server.GetPlayers(Role.FACILITY_GUARD)[rand].GiveItem(ItemType.MEDKIT);
             }
         }
 
@@ -1839,6 +1875,34 @@ namespace EventManager
                     }
                     plugin.Debug("1 Blackout cycle");
                     EventManager.T_BO = DateTime.Now.AddSeconds(1);
+                }
+            }
+            if (EventManager.RoundStarted && DCDC && EventManager.ActiveEvent == "")
+            {
+                if (System.DateTime.Now.ToString() == EventManager.T_DD.ToString() && !DCDC_3)
+                {
+                    plugin.Server.Map.GetSpawnPoints(Role.CLASSD).ForEach(point => {
+                        plugin.Server.GetPlayers().ForEach(player => {
+                            if(Vector.Distance(point,player.GetPosition()) <= 2)
+                            {
+                                player.Kill(DamageType.DECONT);
+                            }
+                        });
+                        plugin.Server.Map.GetDoors().ForEach(door => {
+                            if (Vector.Distance(point, door.Position) <= 2)
+                            {
+                                door.Open = false;
+                                door.Locked = true;
+                            }
+                        });
+                    });
+                    plugin.Server.Map.AnnounceCustomMessage("PITCH_0,9 Decontamination of ClassD chamber completed successfully");
+                    DCDC_3 = true;
+                }
+                else if (System.DateTime.Now.AddMinutes(1).ToString() == EventManager.T_DD.ToString() && !DCDC_2)
+                {
+                    plugin.Server.Map.AnnounceCustomMessage("PITCH_0,9 Decontamination of ClassD chamber in t minus 1 minute");
+                    DCDC_2 = true;
                 }
             }
             if (EventManager.TB1)
@@ -2892,6 +2956,46 @@ namespace EventManager
             {
                 ev.PlayerList = new System.Collections.Generic.List<Player>();
             }
+            if(!ev.SpawnChaos)
+            {
+                if (plugin.ConfigManager.Config.GetBoolValue("cc_mtf_medic", false))
+                {
+                    int rand = new Random().Next(0, ev.PlayerList.Count - 1);
+                    if(ev.PlayerList[rand].TeamRole.Role != Role.NTF_COMMANDER)
+                    {
+                        Player player = ev.PlayerList[rand];
+                        player.ChangeRole(Role.NTF_LIEUTENANT);
+                        player.GetInventory().ForEach(item => {
+                            if(item.ItemType == ItemType.DISARMER || item.ItemType == ItemType.FLASHBANG || item.ItemType == ItemType.FRAG_GRENADE)
+                            {
+                                item.Remove();
+                            }
+                        });
+                        player.GiveItem(ItemType.MEDKIT);
+                        player.GiveItem(ItemType.MEDKIT);
+                        player.GiveItem(ItemType.MEDKIT);
+                        ev.PlayerList[rand] = player;
+                    }
+                }
+
+                if (plugin.ConfigManager.Config.GetBoolValue("cc_mtf_tech", false))
+                {
+                    int rand = new Random().Next(0, ev.PlayerList.Count - 1);
+                    if (ev.PlayerList[rand].TeamRole.Role != Role.NTF_COMMANDER)
+                    {
+                        Player player = ev.PlayerList[rand];
+                        player.ChangeRole(Role.NTF_LIEUTENANT);
+                        player.GetInventory().ForEach(item => {
+                            if (item.ItemType == ItemType.MTF_LIEUTENANT_KEYCARD)
+                            {
+                                item.Remove();
+                            }
+                        });
+                        player.GiveItem(ItemType.CONTAINMENT_ENGINEER_KEYCARD);
+                        ev.PlayerList[rand] = player;
+                    }
+                }
+            }  
         }
 
         public void OnElevatorUse(PlayerElevatorUseEvent ev)
@@ -3474,11 +3578,15 @@ namespace EventManager
                         if(Vector.Distance(player.GetPosition(),ev.Player.GetPosition()) <= 5)
                         {
                             Vector pos = player.Get106Portal();
-                            if (pos == null)
+                            if (pos == null || pos == new Vector(0,0,0))
                             {
                                 pos = plugin.Server.Map.GetRandomSpawnPoint(Role.SCP_106);
                             }
-                            player.Teleport(new Vector(pos.x, pos.y+2, pos.z));
+                            else
+                            {
+                                player.Teleport(new Vector(pos.x, pos.y + 2, pos.z));
+                            }
+                            
                         }
                     }
                 });
@@ -3824,7 +3932,32 @@ namespace EventManager
 
         public void OnDoorAccess(PlayerDoorAccessEvent ev)
         {
-            if(ev.Player.IsHandcuffed())
+            if(EventManager.mclose.Contains(ev.Player.SteamId))
+            {
+                ev.Door.Open = false;
+                EventManager.mclose.Remove(ev.Player.SteamId);
+            }
+            if (EventManager.mopen.Contains(ev.Player.SteamId))
+            {
+                ev.Door.Open = true;
+                EventManager.mopen.Remove(ev.Player.SteamId);
+            }
+            if (EventManager.mdestroy.Contains(ev.Player.SteamId))
+            {
+                ev.Destroy = true;
+                EventManager.mdestroy.Remove(ev.Player.SteamId);
+            }
+            if (EventManager.mlock.Contains(ev.Player.SteamId))
+            {
+                ev.Door.Locked = true;
+                EventManager.mlock.Remove(ev.Player.SteamId);
+            }
+            if (EventManager.munlock.Contains(ev.Player.SteamId))
+            {
+                ev.Door.Locked = false;
+                EventManager.munlock.Remove(ev.Player.SteamId);
+            }
+            if (ev.Player.IsHandcuffed() && plugin.ConfigManager.Config.GetBoolValue("HandcuffedLock", false))
             {
                 ev.Allow = false;
             }

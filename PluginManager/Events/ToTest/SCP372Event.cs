@@ -20,7 +20,7 @@ namespace EventManager
             {
                 EventManager.ActiveEvent = "372";
                 this.plugin = plugin;
-                plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:Wyłom 372", false);
+                plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":Wyłom 372", false);
                 EventManager.ToDSC.Initate(admin, "372", forced);
             }
         }

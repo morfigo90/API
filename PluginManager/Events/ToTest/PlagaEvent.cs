@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "Plaga";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:Plaga", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":Plaga", false);
             EventManager.ToDSC.Initate(admin, "Plaga", forced);
         }
     }

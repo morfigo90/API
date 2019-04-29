@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "689";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:SCP 689 Breakout(WIP)", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":SCP 689 Breakout(WIP)", false);
             EventManager.ToDSC.Initate(admin, "689", forced);
         }
     }

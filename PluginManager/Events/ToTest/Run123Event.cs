@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "Run123";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:1 2 3 Idziemy gdy nie patrzysz ty", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":1 2 3 Idziemy gdy nie patrzysz ty", false);
             EventManager.ToDSC.Initate(admin, "Run123", forced);
         }
     }

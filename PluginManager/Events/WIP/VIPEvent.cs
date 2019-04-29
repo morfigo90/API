@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "VIP";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:V.I.P.(WIP)", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":V.I.P.(WIP)", false);
             EventManager.ToDSC.Initate(admin, "VIP", forced);
         }
     }

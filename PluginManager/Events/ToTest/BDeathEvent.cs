@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "BDeath";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:Czarna Śmierć", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":Czarna Śmierć", false);
             EventManager.ToDSC.Initate(admin, "BDeath", forced);
         }
     }

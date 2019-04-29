@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "Apo";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:Apokalipsa Zombie", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":Apokalipsa Zombie", false);
             EventManager.ToDSC.Initate(admin, "Apo", forced);
         }
     }

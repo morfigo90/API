@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "Chowany";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5,"(EventManager)Uruchomiono event:Chowany",false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":Chowany", false);
             EventManager.ToDSC.Initate(admin, "Chowany", forced);
         }
     }

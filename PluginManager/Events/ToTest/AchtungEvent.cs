@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "Achtung";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:Achtung", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)"+plugin.GetTranslation("event_ini")+":Achtung", false);
             EventManager.ToDSC.Initate(admin, "Achtung", forced);
         }
     }

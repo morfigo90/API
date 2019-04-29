@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "Search";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)Uruchomiono event:Poszukiwania", false);
+            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":Poszukiwania", false);
             EventManager.ToDSC.Initate(admin, "Search", forced);
         }
     }
