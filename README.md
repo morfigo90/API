@@ -1,2 +1,2 @@
 # Event-Manager
-Version:1.7.3 BETA
+Version:0.9.2 BETA
