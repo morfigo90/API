@@ -1,2 +1,2 @@
 # Event-Manager
-Version:0.10.1 BETA
+Version:0.10.0 BETA
