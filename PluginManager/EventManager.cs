@@ -3,8 +3,11 @@ using Smod2.Attributes;
 using Smod2.EventHandlers;
 using Smod2.Events;
 using System.Linq;
+using Smod2.Config;
+using Smod2.Lang;
 using System;
 using System.Collections.Generic;
+using Harmony;
 
 namespace EventManager
 {
@@ -12,14 +15,19 @@ namespace EventManager
         author = "Gamer",
         name = "EventManager",
         description = "Event Manager.",
-        id = "Gamer.EM.BETA",
-        version = "0.9.2",
+        id = "Gamer.EM",
+        version = "0.10.0",
+        configPrefix = "em",
+        langFile = "EventManager",
         SmodMajor = 3,
         SmodMinor = 4,
         SmodRevision = 0
         )]
-    class EventManager : Plugin
+
+
+    public class EventManager : Plugin
     {
+        static internal List<Event> EventsList = new List<Event>();
         static internal List<string> AllowedRoles = new List<string>() {
             "owner",
             "coowner",
@@ -50,7 +58,9 @@ namespace EventManager
             "689",
             "1499",
             "Hunt",
-            "Plaga"
+            "Plaga",
+            "GBreach",
+            "DBBR"
         };
         static internal List<string> EventsDescripcion = new List<string>() {
             "(WIN)W imię nauki-Opis na discord",
@@ -79,31 +89,52 @@ namespace EventManager
             "(Plaga)"
         };
         #region Vars
-        static internal string ActiveEvent = "";
-        static internal bool RoundLocked = false;
-        static internal bool DisableRespawns = false;
-        static internal bool BlackOut = false;
+
+        static public string ActiveEvent = "";
+
+        static public bool RoundLocked = false;
+        static public bool DisableRespawns = false;
+        static public bool BlackOut = false;
         static internal List<int> InGhostMode_pid = new List<int>();
         static internal Smod2.API.Role spectator_role = Smod2.API.Role.UNASSIGNED;
-        static internal bool RoundStarted = false;
-        static internal bool TB1 = false;
-        static internal DateTime T1;
-        static internal string T1W;
-        static internal bool TB2 = false;
-        static internal DateTime T2;
-        static internal string T2W;
+        static public bool RoundStarted = false;
+        static public bool TB1 = false;
+        static public DateTime T1;
+        static public string T1W;
+        static public bool TB2 = false;
+        static public DateTime T2;
+        static public string T2W;
         static internal DateTime T_BO;
         static internal DateTime T_DD;
         static internal todsc ToDSC = null;
         static internal bool OfflineMode = true;
-        static internal bool AllowToEveryone = false;
-        static internal bool DNPN = false;
+        static internal bool AllowToEveryone = true;
+        static public bool DNPN = false;
         static internal List<string> mlock = new List<string>();
         static internal List<string> munlock = new List<string>();
         static internal List<string> mopen = new List<string>();
         static internal List<string> mclose = new List<string>();
         static internal List<string> mdestroy = new List<string>();
-        static internal bool TranslationsEnabled = false;
+        static public bool TranslationsEnabled = false;
+
+        static public List<Vision> visions = new List<Vision>();
+
+        static public Smod2.API.Player SCP372 = null;
+
+        /*static internal WarheadStatus Warhead = new WarheadStatus {
+            TimeLeft = -1,
+            CountingDown = false,
+            ButtonOpen = false,
+            ButtonLock = false,
+            LeverLock = false,
+            StartLock = false,
+            StopLock = false,
+            Resumed = false,
+            Detonated = false
+        };*/
+
+        static public Event CurrentEvent;
+
         #endregion
         public override void OnDisable(){}
         public override void OnEnable()
@@ -111,16 +142,63 @@ namespace EventManager
             ToDSC = new todsc(this);
             this.Info("Event Manager loaded");
         }
+        #region Config
+        [ConfigOption]
+        public static bool enabled = true;
+
+        [ConfigOption]
+        public static bool AutoEvent = false;
+
+        [ConfigOption]
+        public static int AutoEventRoundCount = 4;
+
+        [ConfigOption]
+        public static int AutoEventVoteEnd = 75;
+
+        [ConfigOption]
+        public static bool HandcuffedLock = false;
+
+        [ConfigOption]
+        public static bool decontaminate_classd = false;
+
+        [ConfigOption]
+        public static bool cc_mtf_medic = false;
+
+        [ConfigOption]
+        public static bool cc_mtf_tech = false;
+
+        [ConfigOption]
+        public static bool cc_fg_sfg = false;
+
+        [ConfigOption]
+        public static bool translations_enabled = true;
+
+        [ConfigOption]
+        public static bool testmode = false;
+        #endregion
+        #region Lang
+        [LangOption]
+        public static string event_ini = "Uruchomiono event";
+        [LangOption]
+        public static string event_ld = "Uwaga! Mogą wystąpić chwilowe lagi!";
+        [LangOption]
+        public static string event_nep = "Niewystarczająca ilość graczy by uruchomić event.";
+        [LangOption]
+        public static string event_ph = "Ten event jest tylko place holderem!";
+        [LangOption]
+        public static string warhead_stl = "<color=red>Uwaga</color> nie możesz odblokować alpha warhead przed czasem który został ustawiony na serwerze. Zapytaj admina jaki jest to czas";
+        #endregion
 
         public override void Register()
         {
             this.AddEventHandlers(new RoundEventHandler(this));
+            this.AddEventHandlers(new SCP372EventHandler(this));
 
-            this.AddCommand("EventManager", new FEvent(this));
-            this.AddCommand("EM", new FEvent(this));
-
+            this.AddCommand("EventManager", new CommandHandler(this));
+            this.AddCommand("EM", new CommandHandler(this));
+            //Patch.Ghost.PatchMethodsUsingHarmony();
             #region Config
-            this.AddConfig(new Smod2.Config.ConfigSetting("AutoEvent", false, true, "AutoEvent enabled?"));
+            /*this.AddConfig(new Smod2.Config.ConfigSetting("AutoEvent", false, true, "AutoEvent enabled?"));
             this.AddConfig(new Smod2.Config.ConfigSetting("AutoEventRoundCount", 4, true, "Number of round needed to initiate next event"));
             this.AddConfig(new Smod2.Config.ConfigSetting("AutoEventVoteEnd", 75, true, "Number of votes needed to force event end."));
             this.AddConfig(new Smod2.Config.ConfigSetting("HandcuffedLock", false, true, "If player is handcuffed he can't use elevators and doors"));
@@ -128,57 +206,103 @@ namespace EventManager
             this.AddConfig(new Smod2.Config.ConfigSetting("cc_mtf_medic", false, true, "new MTF class"));
             this.AddConfig(new Smod2.Config.ConfigSetting("cc_mtf_tech", false, true, "new MTF class"));
             this.AddConfig(new Smod2.Config.ConfigSetting("cc_fg_sfg", false, true, "new guard class"));
-            this.AddConfig(new Smod2.Config.ConfigSetting("ts_enabled", true, true, "Enable translations"));
-            TranslationsEnabled = this.GetConfigBool("ts_enabled");
+            this.AddConfig(new Smod2.Config.ConfigSetting("translations_enabled", true, true, "Enable translations"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("testmode", false, true, "Enable testmode"));*/
+            TranslationsEnabled = translations_enabled;
             #endregion
             #region Translations
-
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_ini", "Uruchomiono event", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_nep", "Niewystarczająca ilość graczy by uruchomić event.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_ph", "Ten event jest tylko place holderem!", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_372_scp", "Jesteś SCP 372. Jesteś niewidzialny dopóki nie strzelasz,przeładowywujesze,leczysz się,zmieniasz ustawienie 914,podnosisz item", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_372_scp", "Jesteś <color=red>SCP 372</color>. Jesteś niewidzialny dopóki nie strzelasz,przeładowywujesze,leczysz się,zmieniasz ustawienie 914,upuszczasz item", "EventManager"));
             this.AddTranslation(new Smod2.Lang.LangSetting("event_oday", "Transkrypcja:Alarm. Alarm. Doktor Bright wykryty w placówce. Alarm całej strefy uruchomiony. Kod czerwony. Skanowanie w poszukiwaniu uszkodzień placówki.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_win_scp", "Jesteś SCP. Twoje zadanie to nie pozwolić naukowcom uciec.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_win_sci", "Jesteś naukowcem. Twoje zadanie to uciec z placówki.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_plag_scp", "Jesteś SCP. Twoje zadanie to zabić wszystkich MTF przed dekontaminacją LCZ.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_plag_mtf", "Jesteś MTF. Twoje zadanie to przerzyć do dekontaminacji LCZ. Każdy kto umrze staje się SCP", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_hunt_main", "Zadaniem SCP jest zabić MTF i odwrotnie. Jeśli SCP zginie jego zabójca staje się SCP. Powodzenia", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_689_scp", "Jesteś SCP 689", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_343_scp", "Jesteś SCP 343. Jesteś bogiem. Jesteś nieśmiertelny oraz możesz otwierać wszystkie drzwi. Każda broń którą podniesiesz staje się monetą lub czymś innym.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_morbus_d", "Jesteś klasą D. Twoje zadanie to przeżyć. Uważaj na SCP 939 'Matka'. Uruchom wszystkie generatory by zabić SCP 939 i wygrać.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_morbus_m_1", "Jesteś SCP 939 'Matka'. Za 2 minuty otrzymasz kubek. Jeśli go wyrzucisz staniesz się scp 939. Aby zamienić się spowrotem wpisz .z w konsoli pod ~.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_morbus_m_2", "Twoje zadanie to zabic klasy D. Jeśli umrzesz to przegrywasz. Jeśli kogoś zabijesz to staje się on ukrytym 939. Jeśli ukryty 939 umrze staje sie zwykłym 939.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_win_scp", "Jesteś <color=red>SCP,/color>. Twoje zadanie to nie pozwolić naukowcom uciec.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_win_sci", "Jesteś <color=yellow>naukowcem</color>. Twoje zadanie to uciec z placówki.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_plag_scp", "<color=red>Jesteś SCP</color>. Twoje zadanie to zabić wszystkich <color=blue>MTF</color> przed dekontaminacją LCZ.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_plag_mtf", "<color=blue>Jesteś MTF</color>. Twoje zadanie to przerzyć do dekontaminacji LCZ. Każdy kto umrze staje się <color=red>SCP</color>", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_hunt_main", "Zadaniem <color=red>SCP</color> jest zabić <color=blue>MTF,/color> i odwrotnie. Jeśli <color=red>SCP</color> zginie jego zabójca staje się <color=red>SCP</color>. Powodzenia", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_689_scp", "Jesteś <color=red>SCP 689</color>", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_343_scp", "Jesteś <color=red>SCP 343</color>. Jesteś bogiem. Jesteś nieśmiertelny oraz możesz otwierać wszystkie drzwi. Każda broń którą podniesiesz staje się monetą lub czymś innym.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_morbus_d", "Jesteś <color=orange>klasą D</color>. Twoje zadanie to przeżyć. Uważaj na <color=red>SCP 939</color> 'Matka'. Uruchom wszystkie generatory by zabić <color=red>SCP 939</color> i wygrać.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_morbus_m_1", "Jesteś <color=red>SCP 939</color> 'Matka'. Za 2 minuty otrzymasz kubek. Jeśli go wyrzucisz staniesz się <color=red>scp 939</color>. Aby zamienić się spowrotem wpisz .z w konsoli pod ~.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_morbus_m_2", "Twoje zadanie to zabic <color=orange>klasy D</color>. Jeśli umrzesz to przegrywasz. Jeśli kogoś zabijesz to staje się on ukrytym <color=red>SCP 939</color>. Jeśli ukryty <color=red>SCP 939</color> umrze staje sie zwykłym <color=red>SCP 939</color>.", "EventManager"));
             this.AddTranslation(new Smod2.Lang.LangSetting("event_morbus_m_3", "Jeśli wszystkie generatory zostaną uruchomione to podczas overchargu umrzesz.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_cameleon_m_1", "Jesteś SCP-Kameleon. Twoje zadanie to zabić wszystkich poza SCP. SCP nie mogą cię skrzywdzić(poza teslą).", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_cameleon_m_1", "Jesteś <color=red>SCP-Kameleon</color>. Twoje zadanie to zabić wszystkich poza <color=red>SCP</color>. <color=red>SCP</color> nie mogą cię skrzywdzić(poza teslą).", "EventManager"));
             this.AddTranslation(new Smod2.Lang.LangSetting("event_cameleon_m_2", "W ekwipunku masz pistolet,kartę O5,monetę,kartę sprzątacza,tablet.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_cameleon_m_3", "Po wyrzuceniu monety przybierasz postać klasy D, Karta sprzątacza - Naukowiec,Tablet - Tutorial,Masz 3000 hp. Nie możesz zadawać obrażeń w innej formie niż tutorial.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_cameleon_m_4", "Nie możesz ranić SCP. Powodzenia", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_tsl_i", "Jesteś niewinny. Twoje zadanie to pomóc detektywowi zabić zdrajców.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_tsl_d", "Jesteś detektywem. Twoje zadanie to zabić zdrajców.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_tsl_t", "Jesteś zdrajcą. Twoje zadanie to zabić niewinnych i detektywów. Pod ~ możesz sprawdzić kto też jest zdrajcą.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_tsl_tm", "Traitorzy", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_search_d", "Jesteś klasą D. Twoje zadanie to znaleść Micro-HID i uciec z nim. Kto pierwszy ten lepszy. Możecie się zabijać.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_ld", "Uwaga! Mogą wystąpić chwilowe lagi!", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_run123_d", "Jesteś klasą D . Twoje zadanie to uciec", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_run123_scp", "Jesteś SCP 173. Twoje zadanie to zabić klasy D zanim uciekną", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_cameleon_m_3", "Po wyrzuceniu monety przybierasz postać <color=orange>klasy D</color>, Karta sprzątacza - <color=yellow>Naukowiec</color>,Tablet - <color=green>Tutorial</color>,Masz 3000 hp. Nie możesz zadawać obrażeń w innej formie niż <color=green>tutorial</color>.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_cameleon_m_4", "Nie możesz ranić <color=red>SCP</color>. Powodzenia", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_tsl_i", "Jesteś <color=green>niewinny</color>. Twoje zadanie to pomóc <color=blue>detektywowi</color> zabić <color=red>zdrajców</color>.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_tsl_d", "Jesteś <color=blue>detektywem</color>. Twoje zadanie to zabić <color=red>zdrajców</color>.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_tsl_t", "Jesteś <color=red>zdrajcą</color>. Twoje zadanie to zabić <color=green>niewinnych</color> i <color=blue>detektywów</color>. Pod ~ możesz sprawdzić kto też jest <color=red>zdrajcą</color>.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_tsl_tm", "<color=red>Zdrajcy</color>", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_search_d", "Jesteś <color=orange>klasą D</color>. Twoje zadanie to znaleść Micro-HID i uciec z nim. Kto pierwszy ten lepszy. Możecie się zabijać.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_run123_d", "Jesteś <color=orange>klasą D</color> . Twoje zadanie to uciec", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_run123_scp", "Jesteś <color=red>SCP 173</color>. Twoje zadanie to zabić <color=orange>klasy D</color> zanim uciekną", "EventManager"));
             this.AddTranslation(new Smod2.Lang.LangSetting("event_bo", "Jest to zwykła runda. Prawie.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_fight173_d", "Jesteś klasą D. Twoje zadanie to z przeżyć.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_fight173_scp", "Jesteś 173. Twoje zadanie to zabić klasy D. Za 30 sekund zostaniesz przeniesiony", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_vip_ci", "Jesteś Rebelią Chaosu. Twoje zadanie to nie pozwolić zabic naukowca.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_vip_scp", "Jesteś podmiotem SCP. Twoje zadanie to nie pozwolić zabic naukowca.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_vip_vip", "Jesteś VIP-em twoje zadanie to przeżyć i uciec z pomocą MTF.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_vip_l", "Jesteś Porucznikiem. Twoje zadanie to eskortować naukowca", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_vip_c", "Jesteś Dowódcą. Twoje zadanie to eskortować naukowca", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_bd_scp", "Jesteś Czarną Śmiercią. Twoje zadanie to zabić klasy D zanim uruchomią wszystkie generatory.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_bd_d", "Jesteś klasą D. Twoje zadanie to uruchomić wszystkie generatory by zabić Czarną Śmierć.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_fight173_d", "Jesteś <color=orange>klasą D</color>. Twoje zadanie to z przeżyć.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_fight173_scp", "Jesteś <color=red>SCP 173</color>. Twoje zadanie to zabić <color=orange>klasy D</color>. Za 30 sekund zostaniesz przeniesiony", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_vip_ci", "Jesteś <color=darkgreen>Rebelią Chaosu</color>. Twoje zadanie to nie pozwolić zabic <color=yellow>naukowca</color>.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_vip_scp", "Jesteś podmiotem <color=red>SCP</color>. Twoje zadanie to nie pozwolić zabic <color=yellow>naukowca</color>.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_vip_vip", "Jesteś VIP-em twoje zadanie to przeżyć i uciec z pomocą <color=blue>MTF</color>.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_vip_l", "Jesteś <color=blue>Porucznikiem MTF</color>. Twoje zadanie to eskortować <color=yellow>naukowca</color>", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_vip_c", "Jesteś <color=red>Dowódcą MTF</color>. Twoje zadanie to eskortować <color=yellow>naukowca</color>", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_bd_scp", "Jesteś <color=black>Czarną Śmiercią</color>. Twoje zadanie to zabić <color=orange>klasy D</color> zanim uruchomią wszystkie generatory.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_bd_d", "Jesteś <color=orange>klasą D</color>. Twoje zadanie to uruchomić wszystkie generatory by zabić <color=black>Czarną Śmierć</color>.", "EventManager"));
             this.AddTranslation(new Smod2.Lang.LangSetting("event_ach_d", "Twoje zadanie to przeżyć. Granaty respią się co 30 sekund a każdy następny sekundę mniej.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_hs_scp", "Za 30 sekund zostaniesz przeniesiony. Twoje zadanie to zabić wszystkie klasy D.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_hs_d", "Jesteś klasą D. Twoje zadanie to przeżyć.", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_whr_d", "Jesteś klasą D. Twoje zadanie to uciec z placówki!", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_apo_d", "Jesteś klasą D. Twoje zadanie uciec. Jeśli umrzesz zostaniesz zombie", "EventManager"));
-            this.AddTranslation(new Smod2.Lang.LangSetting("event_apo_scp", "Jesteś zombie. Twoje zadanie to zabić klasy D i nie pozwolić im uciec.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_hs_scp", "Za 30 sekund zostaniesz przeniesiony. Twoje zadanie to zabić wszystkie <color=orange>klasy D</color>.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_hs_d", "Jesteś <color=orange>klasą D</color>. Twoje zadanie to przeżyć.", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_whr_d", "Jesteś <color=orange>klasą D</color>. Twoje zadanie to uciec z placówki!", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_apo_d", "Jesteś <color=orange>klasą D</color>. Twoje zadanie uciec. Jeśli umrzesz zostaniesz <color=red>zombie</color>", "EventManager"));
+            this.AddTranslation(new Smod2.Lang.LangSetting("event_apo_scp", "Jesteś <color=red>zombie</color>. Twoje zadanie to zabić <color=red>klasy D</color> i nie pozwolić im uciec.", "EventManager"));
 
             #endregion
+
+            //EventSystemHandler.LoadEvents(this);
+        }
+        public struct Event
+        {
+            public Plugin Plugin { get; set; }
+            public string Name { get; set; }
+            public string ID { get; set; }
+            public string Descripction { get; set; }
+            public Version EventManagerVersion { get; set; }
+            public Version Version { get; set; }
+            public bool Experimental { get; set; }
+            public bool CanLagOnStart { get; set; }
+            public bool CanLaginRound { get; set; }
+            public string Command { get; set; }
+        }
+
+        public struct Version
+        {
+            public int Major;
+            public int Minior;
+            public int Patch;
+        }
+
+        /*public struct WarheadStatus
+        {
+            public bool CountingDown { get; set; }
+            public bool Resumed { get; set; }
+            public float TimeLeft { get; set; }
+            public bool LeverLock { get; set; }
+            public bool StopLock { get; set; }
+            public bool StartLock { get; set; }
+            public bool ButtonOpen { get; set; }
+            public bool ButtonLock { get; set; }
+            public bool Detonated { get; set; }
+        }
+        */
+
+        public struct Vision
+        {
+            public Smod2.API.Player player { get; set; }
+            public List<Smod2.API.Player> invisible { get; set; }
+        }
+    }
+
+    public abstract class EventManager_Public
+    {
+        public static void RegiserEvent(Plugin eventobj, bool experimental, bool CanLagOnStart, bool CanLagInRound,string command)
+        {
+            EventSystemHandler.RegiserEvent(eventobj, experimental, CanLagOnStart, CanLagInRound,command);
         }
     }
 }

@@ -36,3 +36,19 @@ Patch_6
 -dodano now¹ klasê MTF-Medyk(domyœlnie wy³¹czone, configbool:cc_mtf_medic)
 -dodano now¹ klasê Ochroniarza-Starszy ochroniarz(domyœlnie wy³¹czone, configbool:cc_fg_sfg)
 -added part translation
+Patch_7
+-dodano komendê(giverank)
+-zmienieono dzia³anie sprawdzarki w TSL
+-zmieniono Morbus
+-dodano event:Global Breach
+-przeniesiono event:SCP 372 do odzielnego event handlera
+-dodano komendê say
+-naprawiono komendê controll079
+-zmieniono ghost - od teraz tesla ignoruje graczy w trybie ducha
+-zmieniono ghost - od teraz gracz w trybie ducha nie mo¿e zadawaæ obra¿eñ
+-poprawiono system prac czasowych
+-dodano Event:"Global Breach"
+-poprawiono Morbus
+-zmieniono komunikaty bc/pbc
+-dodano Event:"D Boi Battle Royale"
+-naprawiono b³êdy
