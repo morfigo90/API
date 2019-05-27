@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Builds\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -31,6 +31,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\Downloads\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>D:\scpserver\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Builds\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
     <Reference Include="Smod2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\scpserver\SCPSL_Data\Managed\Smod2.dll</HintPath>
@@ -43,41 +53,58 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>D:\scpserver\SCPSL_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>D:\scpserver\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>D:\scpserver\SCPSL_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Events\ToTest\PlagaEvent.cs" />
-    <Compile Include="Events\ToTest\PolowanieEvent.cs" />
+    <Compile Include="EventSystemHandler.cs" />
+    <Compile Include="Events\ToTest\SCP963Event.cs" />
+    <Compile Include="Events\ToTest\NeedLuckEvent.cs" />
+    <Compile Include="Events\ToTest\GlobalBreachEvent.cs" />
+    <Compile Include="Events\Working\PlagaEvent.cs" />
+    <Compile Include="Events\Working\PolowanieEvent.cs" />
     <Compile Include="Events\PlaceHolders\SCP1499Event.cs" />
     <Compile Include="Events\WIP\SCP689Event.cs" />
-    <Compile Include="Events\ToTest\SCP343Event.cs" />
+    <Compile Include="Events\Working\SCP343Event.cs" />
+    <Compile Include="Patch.cs" />
+    <Compile Include="SCP372EventHandler.cs" />
     <Compile Include="todsc.cs" />
-    <Compile Include="Events\ToTest\SCP372Event.cs" />
+    <Compile Include="Events\Working\SCP372Event.cs" />
     <Compile Include="Events\PlaceHolders\SpyEvent.cs" />
     <Compile Include="Events\WIP\PiniataEvent.cs" />
-    <Compile Include="Events\ToTest\MorbusEvent.cs" />
-    <Compile Include="Events\ToTest\CameleonEvent.cs" />
-    <Compile Include="Events\ToTest\ODayEvent.cs" />
-    <Compile Include="Events\ToTest\TTTEvent.cs" />
-    <Compile Include="Events\WIP\DMEvent.cs" />
-    <Compile Include="Events\Disabled\DBBREvent.cs" />
-    <Compile Include="Events\ToTest\ApoEvent.cs" />
-    <Compile Include="Events\ToTest\SearchEvent.cs" />
-    <Compile Include="Events\ToTest\DarkGameEvent.cs" />
-    <Compile Include="Events\ToTest\Fight173Event.cs" />
-    <Compile Include="Events\ToTest\Run123Event.cs" />
-    <Compile Include="Events\ToTest\VIPEvent.cs" />
-    <Compile Include="Events\ToTest\BDeathEvent.cs" />
-    <Compile Include="Events\ToTest\AchtungEvent.cs" />
-    <Compile Include="Events\ToTest\WarHeadRunEvent.cs" />
+    <Compile Include="Events\Working\MorbusEvent.cs" />
+    <Compile Include="Events\Working\CameleonEvent.cs" />
+    <Compile Include="Events\Working\ODayEvent.cs" />
+    <Compile Include="Events\Working\TTTEvent.cs" />
+    <Compile Include="Events\Working\DMEvent.cs" />
+    <Compile Include="Events\Working\DBBREvent.cs" />
+    <Compile Include="Events\Working\ApoEvent.cs" />
+    <Compile Include="Events\Working\SearchEvent.cs" />
+    <Compile Include="Events\Working\DarkGameEvent.cs" />
+    <Compile Include="Events\Working\Fight173Event.cs" />
+    <Compile Include="Events\Working\Run123Event.cs" />
+    <Compile Include="Events\WIP\VIPEvent.cs" />
+    <Compile Include="Events\Working\BDeathEvent.cs" />
+    <Compile Include="Events\Working\AchtungEvent.cs" />
+    <Compile Include="Events\Working\WarHeadRunEvent.cs" />
     <Compile Include="EventManager.cs" />
-    <Compile Include="Events\ToTest\ChowanyEvent.cs" />
-    <Compile Include="Events\ToTest\WINaukiEvent.cs" />
-    <Compile Include="FEventCommand.cs" />
+    <Compile Include="Events\Working\ChowanyEvent.cs" />
+    <Compile Include="Events\Working\WINaukiEvent.cs" />
+    <Compile Include="CommandHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoundEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Events\Working\" />
+    <Folder Include="Events\Disabled\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

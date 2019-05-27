@@ -1,6 +1,7 @@
 # Event-Manager
 
-Version:0.9.0 BETA
+Version:0.11.1 BETA
+
 
 This is SCP:SL smod2 plugin.
 This plugin is system that provides events and more to your SCP:SL server

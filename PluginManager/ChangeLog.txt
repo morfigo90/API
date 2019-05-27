@@ -1,0 +1,62 @@
+Patch_1
+-dodano respienie siê logicera w trybie:"Morbus"
+-naprawiono blackout w trybie:"Morbus"
+-naprawiono komendê "blackout"
+-dodano respienie siê broni w trybie:"TSL"
+-dodano komendê domyœlnych ról dla spectatorów
+-dodano opcjê "ignoruj wymagane uprawnienia"
+-dodano opcjê "ignoruj wymagan¹ liczbê graczy"
+-naprawiono b³¹d w trybie:"Morbus"-Checkpoint do entrace zone by³ otwarty a nie powinnien
+-poprawiono punkty zdrobia "Matki" w trybie:"Morbus"
+-dodano warunek wygranej klasD w trybie:"Morbus" w wypadku odpalenia wszystkich generatorów
+Patch_2
+-dodano informacje o tym ¿e event jest "WIP"
+-zablokowano mo¿liwoœæ uruchomienia placeholderów
+-zmieniono uruchamanie eventów. Teraz aby uruchomiæ event "WIP" nale¿y dodaæ na koñcu komendy argument "-e"
+Patch_3
+-ztworzono od nowa event:"DM"
+-poprawiono event:"TSL"
+Patch_4
+-dodano komendê:"controll079"
+-zmieniono broñ zdrajcy z Com15 na Logicer
+-dodano dodatkow¹ broñ dla zdrajcy w eventcie:"TSL"- granat od³amkowy
+-zmieniono system respienia siê broni w TSL
+-zamkniêto zbrojowniê
+-od teraz tylko zdrajcy mog¹ otwieraæ zbrojowniê
+-dodano dodatkowy startowy item dla zdrajcy-karta guarda
+-po œmierci zdrajcy jego karta znika
+-poprawiono versjê versji.
+Patch_5
+-poprawiono TSL
+Patch_6
+-dodano komendy(mlock,munlock,mopen,mclose,mdestroy)
+-dodano dekontaminacjê cel klas D
+-poprawiono BDeath
+-dodano now¹ klasê MTF-Technik(domyœlnie wy³¹czone, configbool:cc_mtf_tech)
+-dodano now¹ klasê MTF-Medyk(domyœlnie wy³¹czone, configbool:cc_mtf_medic)
+-dodano now¹ klasê Ochroniarza-Starszy ochroniarz(domyœlnie wy³¹czone, configbool:cc_fg_sfg)
+-added part translation
+Patch_7
+-dodano komendê(giverank)
+-zmienieono dzia³anie sprawdzarki w TSL
+-zmieniono Morbus
+-dodano event:Global Breach
+-przeniesiono event:SCP 372 do odzielnego event handlera
+-dodano komendê say
+-naprawiono komendê controll079
+-zmieniono ghost - od teraz tesla ignoruje graczy w trybie ducha
+-zmieniono ghost - od teraz gracz w trybie ducha nie mo¿e zadawaæ obra¿eñ
+-poprawiono system prac czasowych
+-dodano Event:"Global Breach"
+-poprawiono Morbus
+-zmieniono komunikaty bc/pbc
+-dodano Event:"D Boi Battle Royale"
+-naprawiono b³êdy
+Patch_8
+-dodano event"NeedLuck"
+-zmodyfikowano "Morbus"
+-naprawiono "BDeatch"
+-naprawiono "Cameleon"
+-naprawiono "372"
+-naprawiono "Morbus"
+-naprawiono "GBreach"
