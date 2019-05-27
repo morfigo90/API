@@ -52,3 +52,11 @@ Patch_7
 -zmieniono komunikaty bc/pbc
 -dodano Event:"D Boi Battle Royale"
 -naprawiono b³êdy
+Patch_8
+-dodano event"NeedLuck"
+-zmodyfikowano "Morbus"
+-naprawiono "BDeatch"
+-naprawiono "Cameleon"
+-naprawiono "372"
+-naprawiono "Morbus"
+-naprawiono "GBreach"

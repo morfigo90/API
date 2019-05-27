@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "WarHeadRun";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":Warhead Run", false);
+            plugin.Server.Map.Broadcast(5, EventManager.EMRed + plugin.GetTranslation("event_ini") + ":Warhead Run", false);
             EventManager.ToDSC.Initate(admin, "WarHeadRun", forced);
         }
     }

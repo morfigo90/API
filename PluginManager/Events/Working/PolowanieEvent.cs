@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "Hunt";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":Polowanie", false);
+            plugin.Server.Map.Broadcast(5, EventManager.EMRed + plugin.GetTranslation("event_ini") + ":Polowanie", false);
             EventManager.ToDSC.Initate(admin, "Hunt", forced);
         }
     }

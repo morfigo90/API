@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "Blackout";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":Ciemną grę.", false);
+            plugin.Server.Map.Broadcast(5, EventManager.EMRed + plugin.GetTranslation("event_ini") + ":Ciemną grę.", false);
             EventManager.ToDSC.Initate(admin, "Blackout", forced);
         }
     }

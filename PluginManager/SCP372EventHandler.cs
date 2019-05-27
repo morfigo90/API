@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace EventManager
 {
-	class SCP372EventHandler : IEventHandlerUpdate,IEventHandlerRoundStart,IEventHandlerRoundRestart,IEventHandlerPlayerTriggerTesla,IEventHandlerGeneratorInsertTablet,IEventHandlerPlayerHurt,IEventHandlerThrowGrenade,IEventHandlerPlayerDropItem,IEventHandlerMedkitUse,IEventHandlerReload,IEventHandlerSCP914ChangeKnob,IEventHandlerShoot,IEventHandlerPlayerPickupItemLate/*,IEventHandlerSetRole*/,IEventHandlerSetRoleMaxHP
+	class SCP372EventHandler : IEventHandlerUpdate,IEventHandlerRoundStart,IEventHandlerRoundRestart,IEventHandlerPlayerTriggerTesla,IEventHandlerGeneratorInsertTablet,IEventHandlerPlayerHurt,IEventHandlerThrowGrenade,IEventHandlerPlayerDropItem,IEventHandlerMedkitUse,IEventHandlerReload,IEventHandlerSCP914ChangeKnob,IEventHandlerShoot,IEventHandlerPlayerPickupItemLate/*,IEventHandlerSetRole*/,IEventHandlerSetRoleMaxHP,IEventHandlerCheckRoundEnd
     {
 		private EventManager plugin;
         DateTime T1;
@@ -80,7 +80,7 @@ namespace EventManager
             EventManager.RoundLocked = false;
             EventManager.ActiveEvent = "";
             EventManager.DisableRespawns = false;
-            EventManager.BlackOut = false;
+            EventManager.Blackout_type = EventManager.BlackoutType.NONE;
         }
 
         public void OnPlayerTriggerTesla(PlayerTriggerTeslaEvent ev)
@@ -250,6 +250,28 @@ namespace EventManager
                 if(ev.Role == Role.TUTORIAL)
                 {
                     ev.MaxHP = 3000;
+                }
+            }
+        }
+
+        public void OnCheckRoundEnd(CheckRoundEndEvent ev)
+        {
+            if (EventManager.SCP372 != null)
+            {
+                var onlyscp = true;
+                plugin.Server.GetPlayers().ForEach(player => {
+                    if(player.TeamRole.Team != Smod2.API.Team.SCP && EventManager.SCP372.SteamId != player.SteamId && player.TeamRole.Team != Smod2.API.Team.CHAOS_INSURGENCY)
+                    {
+                        onlyscp = false;
+                    }
+                });
+                if(onlyscp)
+                {
+                    if(EventManager.ActiveEvent == "372")
+                    {
+                        EventManager.RoundLocked = false;
+                        EventManager.ActiveEvent = "";
+                    }
                 }
             }
         }

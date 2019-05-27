@@ -15,6 +15,7 @@ namespace EventManager
 {
     class CommandHandler : ICommandHandler
     {
+
         private EventManager plugin;
         public CommandHandler(EventManager plugin)
         {
@@ -28,7 +29,18 @@ namespace EventManager
 
         public string GetUsage()
         {
-            return "EventManager (force (event name))/(list)/(lockround true/false)/(disresp true/false)/(blackout true/false)/(ghost true/false)/(warp [warp])/(pos)/(tpc [x] [y] [z])/(config)/(specrole [role])(controll079 [args])";
+            return " EventManager force [event name]" +
+                "\n EventManager list" +
+                "\n EventManager lockround true/false" +
+                "\n EventManager disresp true/false" +
+                "\n EventManager blackout true/false" +
+                "\n EventManager ghost true/false" +
+                "\n EventManager warp [warp]" +
+                "\n EventManager pos" +
+                "\n EventManager tpc [x] [y] [z]" +
+                "\n EventManager config" +
+                "\n EventManager specrole [role]" +
+                "\n EventManager controll079 [args]";
         }
 
         public string[] OnCall(ICommandSender sender, string[] args)
@@ -277,13 +289,23 @@ namespace EventManager
                                 new GlobalBreachEvent(plugin, admin, true);
                                 return new string[] { "Starting event. Global Breach" };
                             }
+                        case "NEEDLUCK":
+                            {
+                                new NeedLuckEvent(plugin, admin, true);
+                                return new string[] { "Starting event. All we Need is Luck" };
+                            }
+                        case "963":
+                            {
+                                new SCP963Event(plugin, admin, true);
+                                return new string[] { "Starting event. SCP 963" };
+                            }
                         default:
                             {
                                 return new string[] { "Unkown event", "Use em list to check event list" };
                             }
                     }
                     #region diabled
-                    EventManager.EventsList.ForEach(ev =>
+                    /*EventManager.EventsList.ForEach(ev =>
                     {
                         if (args[1].ToLower() == ev.Command.ToLower())
                         {
@@ -337,8 +359,36 @@ namespace EventManager
                             EventManager.ActiveEvent = Event.Command;
                             return new string[] { "Starting event. " + Event.Name };
                         }
-                    }
+                    }*/
                     #endregion
+                }
+            }
+            else if (args[0].ToLower() == "next" || args[0].ToLower() == "n")
+            {
+                EventManager.Event Event = new EventManager.Event() { Plugin = null };
+                List<string> args2 = new List<string>();
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args2.Add(args[i]);
+                }
+                EventManager.ToDSC.CommandCalled(admin, admin, "next", args2.ToArray());
+                if (!allow)
+                {
+                    plugin.Server.GetPlayers().ForEach(player =>
+                    {
+                        if (player.ToString() == sender.ToString())
+                        {
+                            EventManager.ToDSC.Denied(player, "EventManager " + string.Join(" ", args));
+                        }
+                    });
+
+                    return new string[] { "You're not allowed to controll Event Manager!" };
+                }
+                else
+                {
+                    EventManager.NextEvent_Forcer = admin;
+                    EventManager.NextEvent = args[1];
+                    return new string[] { "Done" };
                 }
             }
             else if (args[0].ToLower() == "config" || args[0].ToLower() == "c")
@@ -430,13 +480,13 @@ namespace EventManager
                 {
                     if (args[1].ToLower() == "true")
                     {
-                        EventManager.BlackOut = true;
+                        EventManager.Blackout_type = EventManager.BlackoutType.BOTH;
                         EventManager.T_BO = DateTime.Now.AddSeconds(1);
                         return new string[] { "Done", "Blackout is now enabled" };
                     }
                     else if (args[1].ToLower() == "false")
                     {
-                        EventManager.BlackOut = false;
+                        EventManager.Blackout_type = EventManager.BlackoutType.NONE;
                         return new string[] { "Done", "Blackout is now disabled" };
                     }
                     else
@@ -996,7 +1046,63 @@ namespace EventManager
                 });
                 return toreturn;
             }
-            else if (args[0].ToLower() == "info")
+            else if (args[0].ToLower() == "say")
+            {
+                if (args.Length <= 3) return new string[] { "Wrong arguments", "em say [playerid]/all [color] [message]" };
+                string message = "";
+                for (int i = 3; i < args.Length; i++)
+                {
+                    message = message + " " + args[i];
+                }
+                if (args[1].ToLower() == "all")
+                {
+                    plugin.Server.GetPlayers().ForEach(player => {
+                        player.SendConsoleMessage(message, args[2]);
+                    });
+                }
+                else
+                {
+                    plugin.Server.GetPlayers().ForEach(player => {
+                        if (player.PlayerId.ToString() == args[1])
+                        {
+                            player.SendConsoleMessage(message, args[2]);
+                        }
+                    });
+                }
+                return new string[] { "Done" };
+            }
+            else if (args[0].ToLower() == "attk")
+            {
+                List<string> args2 = new List<string>();
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args2.Add(args[i]);
+                }
+                EventManager.ToDSC.CommandCalled(admin, admin, "attk", args2.ToArray());
+                if (EventManager.ActiveEvent != "") return new string[] { "You can't override AntyTeslaTeamKill when event is active." };
+                if (args.Length <= 1 || args[1] == "")
+                {
+                    return new string[] { "Unknown Command", "EventManager attk true/false" };
+                }
+                else
+                {
+                    if (args[1].ToLower() == "true")
+                    {
+                        EventManager.ATTK = true;
+                        return new string[] { "Done", "AntyTeslaTeamKill system is now enabled" };
+                    }
+                    else if (args[1].ToLower() == "false")
+                    {
+                        EventManager.ATTK = false;
+                        return new string[] { "Done", "AntyTeslaTeamKill system is now disabled" };
+                    }
+                    else
+                    {
+                        return new string[] { "Unknown Command", "EventManager attk true/false" };
+                    }
+                }
+            }
+            else if (args[0].ToLower() == "info" && !EventManager.OfflineMode)
             {
                 List<string> args2 = new List<string>();
                 for (int i = 1; i < args.Length; i++)
@@ -1008,7 +1114,7 @@ namespace EventManager
                 EventManager.ToDSC.Info(args[1]);
                 return new string[] { "Done" };
             }
-            else if (args[0].ToLower() == "warn")
+            else if (args[0].ToLower() == "warn" && !EventManager.OfflineMode)
             {
                 List<string> args2 = new List<string>();
                 for (int i = 1; i < args.Length; i++)
@@ -1020,7 +1126,7 @@ namespace EventManager
                 EventManager.ToDSC.Warn(args[1]);
                 return new string[] { "Done" };
             }
-            else if (args[0].ToLower() == "error")
+            else if (args[0].ToLower() == "error" && !EventManager.OfflineMode)
             {
                 List<string> args2 = new List<string>();
                 for (int i = 1; i < args.Length; i++)
@@ -1032,7 +1138,7 @@ namespace EventManager
                 EventManager.ToDSC.Error(args[1]);
                 return new string[] { "Done" };
             }
-            else if (args[0].ToLower() == "dnask")
+            else if (args[0].ToLower() == "dnask" && EventManager.testmode)
             {
                 List<string> args2 = new List<string>();
                 for (int i = 1; i < args.Length; i++)
@@ -1058,246 +1164,9 @@ namespace EventManager
                 plugin.Server.Map.AnnounceCustomMessage(output); ;
                 return new string[] { ":)" };
             }
-            else if (args[0].ToLower() == "say")
+            else if (args[0] == "oof2" && EventManager.testmode)
             {
-                if (args.Length <= 3) return new string[] { "Wrong arguments" , "em say [playerid]/all [color] [message]" };
-                string message = "";
-                for (int i = 3; i < args.Length; i++)
-                {
-                    message = message + " " + args[i];
-                }
-                if(args[1].ToLower() == "all")
-                {
-                    plugin.Server.GetPlayers().ForEach(player => {
-                        player.SendConsoleMessage(message,args[2]);
-                    });
-                }
-                else
-                {
-                    plugin.Server.GetPlayers().ForEach(player => {
-                        if(player.PlayerId.ToString() == args[1])
-                        {
-                            player.SendConsoleMessage(message, args[2]);
-                        }
-                    });
-                }
-                return new string[] { "Done" };
-            }
-            #region Disabled
-            /* 
-            else if (args[0].ToLower() == "warhead")
-            {
-                if(args.Length == 1) return new string[] { "Wrong arguments", "em warhead start/stop/on/off/lockstart/lockstop/lockbutton/locklever" };
-                switch(args[1])
-                {
-                    case "start":
-                        {
-                            plugin.CommandManager.CallCommand(sender, "nuke", new string[] { "start" });
-                            EventManager.Warhead.CountingDown = true;
-                            return new string[] { "Alpha Warhead initated" };
-                        }
-                    case "stop":
-                        {
-                            plugin.CommandManager.CallCommand(sender, "nuke", new string[] { "stop" });
-                            EventManager.Warhead.CountingDown = false;
-                            return new string[] { "Alpha Warhead cancled" };
-                        }
-                    case "on":
-                        {
-                            plugin.CommandManager.CallCommand(sender,"nuke", new string[] { "on" });
-                            return new string[] { "Alpha Warhead turned on" };
-                        }
-                    case "off":
-                        {
-                            plugin.CommandManager.CallCommand(sender, "nuke", new string[] { "off" });
-                            return new string[] { "Alpha Warhead turned off" };
-                        }
-                    case "lockstart":
-                        {
-                            if(args.Length == 2) return new string[] { "Wrong arguments", "em warhead lockstart true/false" };
-                            if(args[2] == "true")
-                            {
-                                EventManager.Warhead.StartLock = true;
-                                return new string[] { "Alpha Warhead start lock turned on" };
-                            }
-                            else if(args[2] == "false")
-                            {
-                                EventManager.Warhead.StartLock = false;
-                                return new string[] { "Alpha Warhead start lock turned off" };
-                            }
-                            else
-                            {
-                                return new string[] { "Wrong arguments", "em warhead lockstart true/false" };
-                            }
-                        }
-                    case "lockstop":
-                        {
-                            if (args.Length == 2) return new string[] { "Wrong arguments", "em warhead lockstop true/false" };
-                            if (args[2] == "true")
-                            {
-                                EventManager.Warhead.StopLock = true;
-                                plugin.CommandManager.CallCommand(sender, "nuke", new string[] { "lock" });
-                                return new string[] { "Alpha Warhead stop lock turned on" };
-                            }
-                            else if (args[2] == "false")
-                            {
-                                EventManager.Warhead.StopLock = false;
-                                plugin.CommandManager.CallCommand(sender, "nuke", new string[] { "unlock" });
-                                return new string[] { "Alpha Warhead stop lock turned off" };
-                            }
-                            else
-                            {
-                                return new string[] { "Wrong arguments", "em warhead lockstop true/false" };
-                            }
-                        }
-                    case "lockbutton":
-                        {
-                            if (args.Length == 2) return new string[] { "Wrong arguments", "em warhead lockbutton true/false" };
-                            if (args[2] == "true")
-                            {
-                                EventManager.Warhead.ButtonLock = true;
-                                return new string[] { "Alpha Warhead button lock turned on" };
-                            }
-                            else if (args[2] == "false")
-                            {
-                                EventManager.Warhead.ButtonLock = false;
-                                return new string[] { "Alpha Warhead button lock turned off" };
-                            }
-                            else
-                            {
-                                return new string[] { "Wrong arguments", "em warhead lockbutton true/false" };
-                            }
-                        }
-                    case "locklever":
-                        {
-                            if (args.Length == 2) return new string[] { "Wrong arguments", "em warhead locklever true/false" };
-                            if (args[2] == "true")
-                            {
-                                EventManager.Warhead.LeverLock = true;
-                                return new string[] { "Alpha Warhead level locked" };
-                            }
-                            else if (args[2] == "false")
-                            {
-                                EventManager.Warhead.LeverLock = false;
-                                return new string[] { "Alpha Warhead level locked" };
-                            }
-                            else
-                            {
-                                return new string[] { "Wrong arguments", "em warhead locklever true/false" };
-                            }
-                        }
-                    case "resume":
-                        {
-                            if (args.Length == 2) return new string[] { "Wrong arguments", "em warhead resume true/false" };
-                            if (args[2] == "true")
-                            {
-                                EventManager.Warhead.Resumed = true;
-                                return new string[] { "Alpha Warhead will be resumed" };
-                            }
-                            else if (args[2] == "false")
-                            {
-                                EventManager.Warhead.Resumed = false;
-                                return new string[] { "Alpha Warhead won't be resumed" };
-                            }
-                            else
-                            {
-                                return new string[] { "Wrong arguments", "em warhead resume true/false" };
-                            }
-                        }
-                    default:
-                        {
-                            return new string[] { "Wrong arguments", "em warhead start/stop/on/off/lockstart/lockstop/lockbutton/locklever" };
-                        }
-                }
-            }
-            */
-            #endregion
-            else if (args[0].ToLower() == "test939" && plugin.GetConfigBool("testmode"))
-            {
-                string[] toreturn = new string[] { "" };
-                List<GameObject> players = PlayerManager.singleton.players.ToList();
-                foreach (GameObject gameObject in players)
-                {
-                    Scp939_VisionController component = gameObject.GetComponent<Scp939_VisionController>();
-                    
-                    players.ForEach(player => {
-                        if (player.GetComponent<CharacterClassManager>() == null) toreturn = new string[] { "OOF" }; else
-                        {
-                            if (player.GetComponent<CharacterClassManager>().curClass == 14)
-                            {
-                                if(player.GetComponent<Scp939PlayerScript>())
-                                {
-                                    plugin.Server.GetPlayers().ForEach(playert => {
-                                        if(player.GetComponent<CharacterClassManager>().SteamId == playert.SteamId)
-                                        {
-                                            plugin.Debug("Adding player " + playert.Name);
-                                        }
-                                    });
-                                    component.seeingSCPs.Add(new Scp939_VisionController.Scp939_Vision
-                                    {
-                                        remainingTime = 10000000f,
-                                        scp = player.GetComponent<Scp939PlayerScript>()
-
-                                    });
-                                    toreturn = new string[] { ":)" };
-                                } else
-                                {
-                                    toreturn = new string[] { ":)/2" };
-                                }
-                                
-                            }
-                            else
-                            {
-                                toreturn = new string[] { "Not TUT" };
-                            }
-                        }
-                        
-                    });
-                    if (toreturn != new string[] { "" }) return toreturn;
-                    return new string[] { ":):(" };
-                }
-                return new string[] { "Unknown Command2", GetUsage() };
-            }
-            else if(args[0] == "test9392" && EventManager.testmode)
-            {
-                string[] toreturn = new string[] { "" };
-                List<GameObject> players = PlayerManager.singleton.players.ToList();
-                foreach (GameObject gameObject in players)
-                {
-                    Scp939_VisionController component = gameObject.GetComponent<Scp939_VisionController>();
-                    players.ForEach(player =>
-                    {
-                        Player fs = null;
-                        Player fp = null;
-                        plugin.Server.GetPlayers().ForEach(playert => {
-                            if (player.GetComponent<CharacterClassManager>().SteamId == playert.SteamId)
-                            {
-                                fp = playert;
-                                
-                            }
-                            if (gameObject.GetComponent<CharacterClassManager>().SteamId == playert.SteamId)
-                            {
-                                fs = playert;
-                            }
-                        });
-                        plugin.Debug(fp.Name + "|" + component.CanSee(player.GetComponent<Scp939PlayerScript>()).ToString() + "|" +fs.Name);
-
-                    });
-                }
-                return new string[] { "well" };
-            }
-            else if(args[0] == "test" && EventManager.testmode)
-            {
-                EventSystemHandler.ReloadEvents(plugin);
-                return new string[] { "Processing" };
-            }
-            else if(args[0].ToLower() == "el" && EventManager.testmode)
-            {
-                return EventSystemHandler.GetList();
-            }
-            else if(args[0] == "oof2" && EventManager.testmode)
-            {
-                EventManager.visions.Add(new EventManager.Vision() {player = admin,invisible = plugin.Server.GetPlayers(Role.CLASSD) });
+                EventManager.visions.Add(new EventManager.Vision() {Player = admin,Invisible = plugin.Server.GetPlayers(Role.CLASSD) });
                 return new string[] { "Processing" };
             }
             else if (args[0] == "oof1" && EventManager.testmode)

@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "Cameleon";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":SCP - Cameleon", false);
+            plugin.Server.Map.Broadcast(5, EventManager.EMRed + plugin.GetTranslation("event_ini") + ":SCP - Cameleon", false);
             EventManager.ToDSC.Initate(admin, "Cameleon", forced);
         }
     }

@@ -8,6 +8,7 @@ using Smod2.Lang;
 using System;
 using System.Collections.Generic;
 using Harmony;
+using Smod2.API;
 
 namespace EventManager
 {
@@ -16,7 +17,7 @@ namespace EventManager
         name = "EventManager",
         description = "Event Manager.",
         id = "Gamer.EM",
-        version = "0.10.0",
+        version = "0.11.1",
         configPrefix = "em",
         langFile = "EventManager",
         SmodMajor = 3,
@@ -28,13 +29,13 @@ namespace EventManager
     public class EventManager : Plugin
     {
         static internal List<Event> EventsList = new List<Event>();
-        static internal List<string> AllowedRoles = new List<string>() {
+        static internal readonly List<string> AllowedRoles = new List<string>() {
             "owner",
             "coowner",
             "headadmin",
             "eventmanager"
         };
-        static internal List<string> Events = new List<string>() {
+        static internal readonly List<string> Events = new List<string>() {
             "WIN",
             "WHR",
             "Chowany",
@@ -60,9 +61,11 @@ namespace EventManager
             "Hunt",
             "Plaga",
             "GBreach",
-            "DBBR"
+            "DBBR",
+            "NeedLuck",
+            "963"
         };
-        static internal List<string> EventsDescripcion = new List<string>() {
+        static internal readonly List<string> EventsDescripcion = new List<string>() {
             "(WIN)W imię nauki-Opis na discord",
             "(WHR)WarHead Run-Głowica jest uruchomiana po 1 minucie od startu a zadaniem klas D jest uczieczka. Pierwszy w ucieczce wygrywa.",
             "(Chowany)Chowany-Opis na discord",
@@ -86,15 +89,27 @@ namespace EventManager
             "(689)Podmiot SCP 689 przenosi się do gracza który jako ostatni przeszedł obok niego.(WIP)",
             "(1499)(PlaceHolder)",
             "(Hunt)",
-            "(Plaga)"
+            "(Plaga)",
+            "(GBReach)",
+            "(DBBR)",
+            "(NeedLuck)"
         };
+
+
+        static internal readonly bool OfflineMode = true;
+        static internal readonly bool AllowToEveryone = true;
+        static public readonly bool DNPN = false;
+
+
         #region Vars
-
+        static public string NextEvent = "";
+        static public Smod2.API.Player NextEvent_Forcer;
         static public string ActiveEvent = "";
-
         static public bool RoundLocked = false;
         static public bool DisableRespawns = false;
-        static public bool BlackOut = false;
+        //static public bool BlackOut = false;
+        static public bool ATTK = false;
+        static public BlackoutType Blackout_type = BlackoutType.NONE;
         static internal List<int> InGhostMode_pid = new List<int>();
         static internal Smod2.API.Role spectator_role = Smod2.API.Role.UNASSIGNED;
         static public bool RoundStarted = false;
@@ -107,9 +122,7 @@ namespace EventManager
         static internal DateTime T_BO;
         static internal DateTime T_DD;
         static internal todsc ToDSC = null;
-        static internal bool OfflineMode = true;
-        static internal bool AllowToEveryone = true;
-        static public bool DNPN = false;
+
         static internal List<string> mlock = new List<string>();
         static internal List<string> munlock = new List<string>();
         static internal List<string> mopen = new List<string>();
@@ -121,17 +134,7 @@ namespace EventManager
 
         static public Smod2.API.Player SCP372 = null;
 
-        /*static internal WarheadStatus Warhead = new WarheadStatus {
-            TimeLeft = -1,
-            CountingDown = false,
-            ButtonOpen = false,
-            ButtonLock = false,
-            LeverLock = false,
-            StartLock = false,
-            StopLock = false,
-            Resumed = false,
-            Detonated = false
-        };*/
+        static internal readonly string EMRed = "(<color=red><b>Event Manager</b></color>)";
 
         static public Event CurrentEvent;
 
@@ -161,13 +164,13 @@ namespace EventManager
         [ConfigOption]
         public static bool decontaminate_classd = false;
 
-        [ConfigOption]
+        //[ConfigOption]
         public static bool cc_mtf_medic = false;
 
-        [ConfigOption]
+        //[ConfigOption]
         public static bool cc_mtf_tech = false;
 
-        [ConfigOption]
+        //[ConfigOption]
         public static bool cc_fg_sfg = false;
 
         [ConfigOption]
@@ -186,7 +189,7 @@ namespace EventManager
         [LangOption]
         public static string event_ph = "Ten event jest tylko place holderem!";
         [LangOption]
-        public static string warhead_stl = "<color=red>Uwaga</color> nie możesz odblokować alpha warhead przed czasem który został ustawiony na serwerze. Zapytaj admina jaki jest to czas";
+        public static string event_nl_m = "Jesteś klasą D. Twoje zadanie to zabić wszystkie inne klasy D. Każdy dosostał losową ilość losowych itemów. Punkty HP też są losowe";
         #endregion
 
         public override void Register()
@@ -196,7 +199,8 @@ namespace EventManager
 
             this.AddCommand("EventManager", new CommandHandler(this));
             this.AddCommand("EM", new CommandHandler(this));
-            //Patch.Ghost.PatchMethodsUsingHarmony();
+
+            //Patch.Light.PatchMethodsUsingHarmony();
             #region Config
             /*this.AddConfig(new Smod2.Config.ConfigSetting("AutoEvent", false, true, "AutoEvent enabled?"));
             this.AddConfig(new Smod2.Config.ConfigSetting("AutoEventRoundCount", 4, true, "Number of round needed to initiate next event"));
@@ -293,16 +297,191 @@ namespace EventManager
 
         public struct Vision
         {
-            public Smod2.API.Player player { get; set; }
-            public List<Smod2.API.Player> invisible { get; set; }
+            public Smod2.API.Player Player { get; set; }
+            public List<Smod2.API.Player> Invisible { get; set; }
+        }
+
+        public enum BlackoutType
+        {
+            HCZ,
+            LCZ,
+            BOTH,
+            NONE
+        }
+    
+        public enum Action
+        {
+            NONE = -1,
+            EnableBlackout = 0,
+            DisableBlackout = 1,
+            EnableRespawns = 2,
+            DisableRespawns = 3,
+            EnableRoundLock = 4,
+            DisableRoundLock = 5,
+            EnableATTK = 6,
+            DisableATTK = 7
         }
     }
-
-    public abstract class EventManager_Public
+    /* public abstract class EventManager_Public
     {
         public static void RegiserEvent(Plugin eventobj, bool experimental, bool CanLagOnStart, bool CanLagInRound,string command)
         {
             EventSystemHandler.RegiserEvent(eventobj, experimental, CanLagOnStart, CanLagInRound,command);
+        }
+    }
+    */
+
+    public class Functions
+    {
+        public static ItemType GetRandomItem()
+        {
+            int rand = new Random().Next(0, 30);
+            switch (rand)
+            {
+                case 0:
+                    {
+                        return ItemType.JANITOR_KEYCARD;
+                    }
+                case 1:
+                    {
+                        return ItemType.SCIENTIST_KEYCARD;
+                    }
+                case 2:
+                    {
+                        return ItemType.MAJOR_SCIENTIST_KEYCARD;
+                    }
+                case 3:
+                    {
+                        return ItemType.ZONE_MANAGER_KEYCARD;
+                    }
+                case 4:
+                    {
+                        return ItemType.GUARD_KEYCARD;
+                    }
+                case 5:
+                    {
+                        return ItemType.SENIOR_GUARD_KEYCARD;
+                    }
+                case 6:
+                    {
+                        return ItemType.CONTAINMENT_ENGINEER_KEYCARD;
+                    }
+                case 7:
+                    {
+                        return ItemType.MTF_LIEUTENANT_KEYCARD;
+
+                    }
+                case 8:
+                    {
+                        return ItemType.MTF_COMMANDER_KEYCARD;
+                    }
+                case 9:
+                    {
+                        return ItemType.FACILITY_MANAGER_KEYCARD;
+                    }
+                case 10:
+                    {
+                        return ItemType.CHAOS_INSURGENCY_DEVICE;
+                    }
+                case 11:
+                    {
+                        return ItemType.O5_LEVEL_KEYCARD;
+                    }
+                case 12:
+                    {
+                        return ItemType.RADIO;
+                    }
+                case 13:
+                    {
+                        return ItemType.COM15;
+                    }
+                case 14:
+                    {
+                        return ItemType.MEDKIT;
+                    }
+                case 15:
+                    {
+                        return ItemType.FLASHLIGHT;
+                    }
+                case 16:
+                    {
+                        return ItemType.MICROHID;
+                    }
+                case 17:
+                    {
+                        return ItemType.COIN;
+                    }
+                case 18:
+                    {
+                        return ItemType.CUP;
+                    }
+                case 19:
+                    {
+                        return ItemType.WEAPON_MANAGER_TABLET;
+                    }
+                case 20:
+                    {
+                        return ItemType.E11_STANDARD_RIFLE;
+                    }
+                case 21:
+                    {
+                        return ItemType.P90;
+                    }
+                case 22:
+                    {
+                        return ItemType.DROPPED_5;
+                    }
+                case 23:
+                    {
+                        return ItemType.MP4;
+                    }
+                case 24:
+                    {
+                        return ItemType.LOGICER;
+                    }
+                case 25:
+                    {
+                        return ItemType.FRAG_GRENADE;
+                    }
+                case 26:
+                    {
+                        return ItemType.FLASHBANG;
+                    }
+                case 27:
+                    {
+                        return ItemType.DISARMER;
+                    }
+                case 28:
+                    {
+                        return ItemType.DROPPED_7;
+                    }
+                case 29:
+                    {
+                        return ItemType.DROPPED_9;
+                    }
+                case 30:
+                    {
+                        return ItemType.USP;
+                    }
+                default:
+                    {
+                        return ItemType.NULL;
+                    }
+            }
+
+        }
+
+        public static bool ExecuteAction(EventManager.Action action)
+        {
+            if(action == EventManager.Action.NONE)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+            
         }
     }
 }

@@ -56,6 +56,7 @@
     <Reference Include="UnityEngine">
       <HintPath>D:\scpserver\SCPSL_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>D:\scpserver\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
@@ -66,6 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventSystemHandler.cs" />
+    <Compile Include="Events\ToTest\SCP963Event.cs" />
+    <Compile Include="Events\ToTest\NeedLuckEvent.cs" />
     <Compile Include="Events\ToTest\GlobalBreachEvent.cs" />
     <Compile Include="Events\Working\PlagaEvent.cs" />
     <Compile Include="Events\Working\PolowanieEvent.cs" />
@@ -80,17 +83,17 @@
     <Compile Include="Events\WIP\PiniataEvent.cs" />
     <Compile Include="Events\Working\MorbusEvent.cs" />
     <Compile Include="Events\Working\CameleonEvent.cs" />
-    <Compile Include="Events\ToTest\ODayEvent.cs" />
+    <Compile Include="Events\Working\ODayEvent.cs" />
     <Compile Include="Events\Working\TTTEvent.cs" />
-    <Compile Include="Events\ToTest\DMEvent.cs" />
-    <Compile Include="Events\ToTest\DBBREvent.cs" />
+    <Compile Include="Events\Working\DMEvent.cs" />
+    <Compile Include="Events\Working\DBBREvent.cs" />
     <Compile Include="Events\Working\ApoEvent.cs" />
     <Compile Include="Events\Working\SearchEvent.cs" />
     <Compile Include="Events\Working\DarkGameEvent.cs" />
     <Compile Include="Events\Working\Fight173Event.cs" />
     <Compile Include="Events\Working\Run123Event.cs" />
     <Compile Include="Events\WIP\VIPEvent.cs" />
-    <Compile Include="Events\ToTest\BDeathEvent.cs" />
+    <Compile Include="Events\Working\BDeathEvent.cs" />
     <Compile Include="Events\Working\AchtungEvent.cs" />
     <Compile Include="Events\Working\WarHeadRunEvent.cs" />
     <Compile Include="EventManager.cs" />

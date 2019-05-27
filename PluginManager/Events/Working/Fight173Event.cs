@@ -13,7 +13,7 @@ namespace EventManager
         {
             EventManager.ActiveEvent = "Fight173";
             this.plugin = plugin;
-            plugin.Server.Map.Broadcast(5, "(EventManager)" + plugin.GetTranslation("event_ini") + ":Walka z 173", false);
+            plugin.Server.Map.Broadcast(5, EventManager.EMRed + plugin.GetTranslation("event_ini") + ":Walka z 173", false);
             EventManager.ToDSC.Initate(admin, "Fight173", forced);
         }
     }
