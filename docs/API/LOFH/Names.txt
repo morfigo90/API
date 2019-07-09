@@ -1,1 +1,1 @@
-[~]~[<color=red>DEV</color>]~<size=110><color=red>DEVELOPER</color> ACCESS</size>~[<color=red>M STAFF</color>]~<color=red>MISTAKEN STAFF</color>
+[~]~[<color=red>DEV</color>]~<color=red>DEVELOPER</color> ACCESS~[<color=red>M STAFF</color>]~<color=red>MISTAKEN STAFF</color>
