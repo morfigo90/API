@@ -1,1 +1,2 @@
-Wydział;trz;
+Wydział;
+trz;
