@@ -2,7 +2,7 @@
 ~
 ]
 ~
-[<color=#FF0000>|</color><b><color=#FFD700>DEV</color></b><color=#FF0000>|</color>]
+[<color=#FF0000>|</color><b><color=#FFD700><size=100>DEV</size></color></b><color=#FF0000>|</color>]
 ~
 <color=#FF0000>DEVELOPER</color> ACCESS
 ~
