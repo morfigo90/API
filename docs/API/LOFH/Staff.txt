@@ -12,7 +12,7 @@ FLAG?true?76561198070227545?SOME IP?MISTAKEN STAFF?0;
 
 FLAG?false?76561198123437513?SOME IP?Xsi NAME(<color=red>Komunista</color>)?0;
 
-FLAG?false?76561198247908812?SOME IP?(<color=#bfff00 >limonka</color>)?0;
+FLAG?false?76561198247908812?SOME IP?(<color=#bfff00>limonka</color>)?0;
 
 PREFIX?false??SOME IP?<color=#0000FF>MISTAKEN</color> SERVER?10;
 FLAG?false??SOME IP?<color=#0000FF><size=115><b>MISTAKEN SERVER</b></size></color>?10;
