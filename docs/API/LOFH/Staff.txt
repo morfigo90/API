@@ -15,7 +15,7 @@ FLAG?true?76561198254805450?SOME IP?MISTAKEN STAFF?0;
 
 FLAG?false?76561198123437513?SOME IP?Xsi NAME(<color=red>Komunista</color>)?0;
 
-PREFIX?false?76561198273724914?SOME IP?<size=150><color=orange>PUMPKIN</color></size>?0;
+FLAG?false?76561198273724914?SOME IP?<size=150><color=orange>PUMPKIN</color></size>?0;
 
 
 PREFIX?false??SOME IP?<color=#0000FF>MISTAKEN</color> SERVER?10;
