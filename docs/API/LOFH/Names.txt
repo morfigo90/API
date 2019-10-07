@@ -24,7 +24,7 @@
 ~
 <color=#FF0000>Bans</color>: 
 ~
-[<color=blue>M</color> <color=#FFD700>GAME</color> <color=white>STAFF</color>]
+[<color=blue>M</color> <color=#FFD700>SCP</color> <color=white>STAFF</color>]
 ~
-<color=blue>MISTAKEN <color=#FFD700>GAME</color> STAFF</color>
+<color=blue>MISTAKEN <color=#FFD700>SCP</color> STAFF</color>
 ~
