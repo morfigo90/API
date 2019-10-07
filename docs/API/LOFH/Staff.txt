@@ -13,10 +13,10 @@ FLAG?true?76561198254805450?SOME IP?MISTAKEN STAFF?Maksio200063;
 FLAG?true?76561198838664504?SOME IP?MISTAKEN STAFF?Kamper;
 FLAG?true?76561198252389360?SOME IP?MISTAKEN STAFF?Limokolo;
 
-FLAG?false?76561198123437513?SOME IP?Xsi NAME(<color=red>Komunista</color>)?0;
+FLAG?false?76561198123437513?SOME IP?Xsi NAME(<color=red>Komunista</color>)?Xname;
 
-FLAG?false?76561198273724914?SOME IP?<size=150><color=orange>PUMPKIN</color></size>?0;
+FLAG?false?76561198273724914?SOME IP?<size=150><color=orange>PUMPKIN</color></size>?Bright;
 
 
-PREFIX?false??SOME IP?<color=#0000FF>MISTAKEN</color> SERVER?10;
-FLAG?false??SOME IP?<color=#0000FF><size=115><b>MISTAKEN SERVER</b></size></color>?10;
+PREFIX?false??SOME IP?<color=#0000FF>MISTAKEN</color> SERVER?SERVER;
+FLAG?false??SOME IP?<color=#0000FF><size=115><b>MISTAKEN SERVER</b></size></color>?SERVER;
