@@ -20,7 +20,7 @@
 ~
 <color=#FF0000><b>Warning flag</b></color>: 
 ~
-<color=#FF0000>|</color>{b}<color=#FF0000>|</color>
+<color=#FF0000>|</color><color=white>{b}</color><color=#FF0000>|</color>
 ~
 <color=#FF0000>Bans</color>: 
 ~
