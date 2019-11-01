@@ -28,3 +28,7 @@
 ~
 <color=blue>MISTAKEN <color=#FFD700>SCP</color> STAFF</color>
 ~
+FFC0CB
+~
+FFFFFF
+~
