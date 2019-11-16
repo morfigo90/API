@@ -9,6 +9,7 @@ WARNING?true?76561198128196320?SOME IP?TK, zapraszanie graczy na nightstars, tro
 WARNING?true?76561198046559648?SOME IP?wychodzenie poza dostępne struktury w grze, celowe wykorzystywanie exploitow/bugów <b>NICK</b>: ZmiennoCieplny?Od Domima(CIM);
 WARNING?true?76561198267672474?SOME IP?Liczne TK, wiele ucieczek przed karą, Ukrainiec <b>NICK</b>: PapiGoio?Od Limokolo(CIM);
 WARNING?true?76561198955011520?SOME IP?No taki troche toxik, grozi degradem jak nie da sie mu ub, wyzywa serwerownie, no takie długie bany poproszę<b>NICK</b>: xKrafciu_?Wydział Wewnętrzny;
+WARNING?true?76561198380765751?SOME IP?Ten typ nie myśli, pinguje od tako, Daj ktoś mu długie wakacje jak coś :) (WW) \n<b>NICK</b>: Good Lock?Wydział Wewnętrzny;
 
 WARNING?true?76561198134629649?SOME IP?TAKI TEST <b>NICK</b>: Wydział Wewnętrzny?Wydział Wewnętrzny;
 
