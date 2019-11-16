@@ -12,6 +12,7 @@ WARNING?true?76561198955011520?SOME IP?No taki troche toxik, grozi degradem jak 
 
 
 
+FLAG?false?76561198134629649?SOME IP?WW <color=red>:(</color>?Morfigo;
 FLAG?false?76561198123437513?SOME IP?Xsi NAME(<color=red>Komunista</color>)?Xname;
 
 FLAG?false?76561197979558812?SOME IP?TXT(<color=red>CZERWONY</color>)?Morfigo;
