@@ -10,6 +10,8 @@ WARNING?true?76561198046559648?SOME IP?wychodzenie poza dostępne struktury w gr
 WARNING?true?76561198267672474?SOME IP?Liczne TK, wiele ucieczek przed karą, Ukrainiec <b>NICK</b>: PapiGoio?Od Limokolo(CIM);
 WARNING?true?76561198955011520?SOME IP?No taki troche toxik, grozi degradem jak nie da sie mu ub, wyzywa serwerownie, no takie długie bany poproszę<b>NICK</b>: xKrafciu_?Wydział Wewnętrzny;
 
+WARNING?true?76561198134629649?SOME IP?TAKI TEST<b>NICK</b>: Wydział Wewnętrzny?Wydział Wewnętrzny;
+
 
 
 FLAG?false?76561198134629649?SOME IP?WW <color=red>:(</color>?Morfigo;
