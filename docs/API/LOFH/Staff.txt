@@ -11,7 +11,7 @@ WARNING?true?76561198267672474?SOME IP?Liczne TK, wiele ucieczek przed karą, Uk
 WARNING?true?76561198955011520?SOME IP?No taki troche toxik, grozi degradem jak nie da sie mu ub, wyzywa serwerownie, no takie długie bany poproszę<b>NICK</b>: xKrafciu_?Wydział Wewnętrzny;
 WARNING?true?76561198380765751?SOME IP?Ten typ nie myśli, pinguje od tako, Daj ktoś mu długie wakacje jak coś :) (WW) \n<b>NICK</b>: Good Lock?Wydział Wewnętrzny;
 
-WARNING?true?76561198134629649?SOME IP?TAKI TEST \n<b>NICK</b>: Wydział Wewnętrzny?Wydział Wewnętrzny;
+WARNING?true?76561198134629649?SOME IP?TAKI TEST <br><b>NICK</b>: Wydział Wewnętrzny?Wydział Wewnętrzny;
 
 WARNING?true?76561198120978825?SOME IP?TEST?Wydział Wewnętrzny;
 
