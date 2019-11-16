@@ -14,7 +14,7 @@ WARNING?true?76561198377858844?SOME IP?Notoryczne Wydawanie denerwujących dźwi
 
 WARNING?true?76561198134629649?SOME IP?TAKI TEST?Wydział Wewnętrzny?Wydział Wewnętrzny;
 
-WARNING?true?76561198120978825?SOME IP?TEST?Wydział Wewnętrzny;
+WARNING?true?76561197979558812?SOME IP?TEST?Morfigo?Wydział Wewnętrzny;
 
 
 
