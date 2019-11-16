@@ -12,6 +12,8 @@ WARNING?true?76561198955011520?SOME IP?No taki troche toxik, grozi degradem jak 
 
 WARNING?true?76561198134629649?SOME IP?TAKI TEST <b>NICK</b>: Wydział Wewnętrzny?Wydział Wewnętrzny;
 
+WARNING?true?76561198120978825?SOME IP?TEST?Wydział Wewnętrzny;
+
 
 
 FLAG?false?76561198134629649?SOME IP?WW <color=red>:(</color>?Morfigo;
