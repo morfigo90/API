@@ -1,1 +1,2 @@
-keydrop.pl;
+keydrop.pl;%;
+W;%;
