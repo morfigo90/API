@@ -1,4 +1,2 @@
 keydrop.pl
 |
-Wydział
-|
