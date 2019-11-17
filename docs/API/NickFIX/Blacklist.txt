@@ -1,2 +1,2 @@
-keydrop.pl|
-WWydział
+Wydział|
+keydrop.pl
